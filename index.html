@@ -4,1087 +4,950 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>DreamForge — AI Video Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#f0f4f8;--s1:#fff;--s2:#f5f7fa;--s3:#eef1f5;--s4:#e2e8f0;
+  --bg:#f0f4f8;--s1:#fff;--s2:#f5f7fa;--s3:#eef1f5;
   --b1:rgba(0,0,0,.06);--b2:rgba(0,0,0,.1);--b3:rgba(0,0,0,.16);
   --text:#0f172a;--mu:#64748b;--mu2:#94a3b8;
-  --p:#0ea5e9;--p2:#38bdf8;--p3:#7dd3fc;
-  --acc:#06b6d4;--acc2:#22d3ee;
-  --gr:#22c55e;--re:#ef4444;--am:#f59e0b;--pu:#8b5cf6;
-  --rr:14px;--rs:8px;--rx:24px;
+  --p:#0ea5e9;--p2:#38bdf8;
+  --gr:#22c55e;--re:#ef4444;--am:#f59e0b;
+  --rr:14px;--rs:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;display:flex;flex-direction:column}
+html,body{min-height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px}
 
-/* ── TOPBAR ── */
-.top{height:56px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;z-index:200;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+/* TOPBAR */
+.top{height:54px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .logo{display:flex;align-items:center;gap:8px}
-.logo-ico{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#0ea5e9,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff}
-.logo-nm{font-size:15px;font-weight:700;letter-spacing:-.3px;color:var(--text)}
+.logo-box{width:32px;height:32px;border-radius:9px;background:var(--p);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
+.logo-nm{font-size:15px;font-weight:700;letter-spacing:-.3px}
 .logo-nm span{color:var(--p)}
-.top-modes{display:flex;gap:2px;margin-left:8px}
-.tmd{padding:6px 16px;font-size:13px;font-weight:500;color:var(--mu);background:transparent;border:none;border-radius:var(--rs);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.tmd.on{background:var(--s3);color:var(--text);font-weight:600}
+.top-nav{display:flex;gap:2px;margin-left:12px}
+.tnav{padding:6px 16px;font-size:13px;font-weight:500;color:var(--mu);background:transparent;border:none;border-radius:var(--rs);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s}
+.tnav.on{background:var(--s3);color:var(--text);font-weight:600}
 .top-r{display:flex;align-items:center;gap:8px;margin-left:auto}
-.api-chip{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;background:var(--s2);border:1px solid var(--b1);font-size:11px;color:var(--mu);cursor:pointer}
-.sdot{width:7px;height:7px;border-radius:50%;background:var(--re);flex-shrink:0}
+.api-chip{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;background:var(--s2);border:1px solid var(--b1);font-size:12px;color:var(--mu);cursor:pointer}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--re)}
 .sdot.ok{background:var(--gr)}
-.cred-btn{padding:6px 14px;background:var(--p);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px}
+.api-btn{padding:6px 14px;background:var(--p);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
 
-/* ── MAIN ── */
-.main{display:flex;flex:1;overflow:hidden}
+/* PAGES */
+.page{display:none}.page.on{display:block}
 
-/* ── PAGE ── */
-.page{display:none;width:100%;height:100%}.page.on{display:flex}
-#pg-create{flex-direction:column}
-#pg-projects{flex-direction:column;overflow-y:auto}
-#pg-assets{flex-direction:column;overflow-y:auto}
+/* CREATE PAGE */
+.create{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+.hero{text-align:center;padding:20px 0 16px}
+.hero h1{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(22px,4vw,36px);margin-bottom:6px}
+.hero p{font-size:13px;color:var(--mu)}
 
-/* ═══════════════════════════════
-   CREATE PAGE — CapCut style
-═══════════════════════════════ */
-.create-wrap{display:flex;flex-direction:column;height:100%;max-width:900px;margin:0 auto;width:100%;padding:0 20px}
+/* PROMPT CARD */
+.pcard{background:var(--s1);border-radius:var(--rr);padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:12px}
+#mainPrompt{width:100%;background:transparent;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;resize:none;min-height:72px;max-height:140px;line-height:1.6}
+#mainPrompt::placeholder{color:var(--mu2)}
+.pbar{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--b1);flex-wrap:wrap}
 
-/* Hero section */
-.hero{text-align:center;padding:28px 0 20px;flex-shrink:0}
-.hero-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(24px,3vw,38px);color:var(--text);margin-bottom:6px;letter-spacing:-.5px}
-.hero-sub{font-size:13px;color:var(--mu)}
-
-/* Prompt box */
-.prompt-card{background:var(--s1);border-radius:var(--rr);padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);flex-shrink:0;margin-bottom:12px}
-.prompt-area{width:100%;background:transparent;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;resize:none;min-height:60px;max-height:120px;line-height:1.6}
-.prompt-area::placeholder{color:var(--mu2)}
-.prompt-bar{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--b1);gap:8px}
-.pbar-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.mode-toggle{display:flex;align-items:center;gap:2px;background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:2px}
-.mode-btn{padding:5px 14px;border:none;border-radius:18px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;background:transparent;color:var(--mu);display:flex;align-items:center;gap:4px}
-.mode-btn.on{background:var(--s1);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.settings-pill{display:flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--b2);border-radius:20px;background:transparent;color:var(--p);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s}
-.settings-pill:hover{background:var(--s2)}
-.settings-pill.active{background:rgba(14,165,233,.08);border-color:rgba(14,165,233,.4)}
-.gen-btn{padding:9px 20px;background:var(--p);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px;flex-shrink:0}
+/* MODE TOGGLE */
+.mode-row{display:flex;gap:2px;background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:2px}
+.mdbtn{padding:5px 14px;border:none;border-radius:18px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .12s;background:transparent;color:var(--mu);display:flex;align-items:center;gap:4px}
+.mdbtn.on{background:var(--s1);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.settings-pill{display:flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--b2);border-radius:20px;background:transparent;color:var(--p);font-size:12px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.settings-pill.on{background:rgba(14,165,233,.08);border-color:rgba(14,165,233,.4)}
+.ind-pill{padding:5px 12px;border:1px solid var(--b1);border-radius:20px;background:var(--s2);font-size:12px;color:var(--mu)}
+.gen-btn{padding:9px 22px;background:var(--p);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-left:auto;display:flex;align-items:center;gap:6px}
 .gen-btn:hover{background:var(--p2)}
 .gen-btn:disabled{opacity:.45;cursor:not-allowed}
 
-/* Settings panel */
-.settings-panel{background:var(--s1);border-radius:var(--rr);padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:12px;display:none;animation:slideDown .2s ease}
-.settings-panel.show{display:block}
-@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.sp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.sp-full{grid-column:1/-1}
-.sp-lbl{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:block}
-.sp-sel{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:7px 10px;font-size:12px;color:var(--text);font-family:'Inter',sans-serif;cursor:pointer}
-.sp-sel option{background:#fff}
+/* SETTINGS PANEL */
+.spanel{background:var(--s1);border-radius:var(--rr);padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:12px;display:none}
+.spanel.on{display:block}
+.sp-lbl{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:block}
+.sp-sel{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:7px 10px;font-size:12px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
-/* Style grid */
-.style-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px}
+/* DURATION PILLS — VIDEO CLIP */
+.dur-section{margin-bottom:12px}
+.dur-title{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.clip-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.clip-pill{padding:6px 14px;border:1.5px solid var(--b2);border-radius:20px;background:transparent;color:var(--mu);font-size:12px;font-weight:500;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .12s}
+.clip-pill.on{background:var(--p);border-color:var(--p);color:#fff}
+.full-pills{display:flex;gap:6px;flex-wrap:wrap}
+.full-pill{padding:6px 14px;border:1.5px solid var(--b2);border-radius:20px;background:transparent;color:var(--mu);font-size:12px;font-weight:500;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .12s}
+.full-pill.on{background:var(--am);border-color:var(--am);color:#fff}
+
+/* STYLE SCROLL */
+.style-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
 .style-scroll::-webkit-scrollbar{height:3px}
 .style-scroll::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
-.stc{flex-shrink:0;width:76px;cursor:pointer;border-radius:10px;border:2px solid transparent;overflow:hidden;transition:all .12s;background:var(--s2)}
-.stc.on{border-color:var(--p);box-shadow:0 0 0 3px rgba(14,165,233,.15)}
-.stc-img{width:76px;height:52px;display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden}
-.stc-img img{width:100%;height:100%;object-fit:cover}
-.stc-lbl{font-size:9px;text-align:center;padding:4px 3px;color:var(--mu);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stc.on .stc-lbl{color:var(--p);font-weight:600}
+.stc{flex-shrink:0;width:78px;cursor:pointer;border-radius:10px;border:2px solid transparent;overflow:hidden;transition:all .12s;background:var(--s2)}
+.stc.on{border-color:var(--p)}
+.stc-img{width:78px;height:52px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.stc-lbl{font-size:9px;text-align:center;padding:4px 2px;color:var(--mu);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stc.on .stc-lbl{color:var(--p);font-weight:700}
 
-/* Voice grid */
-.voice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-.vopt{padding:7px 5px;border:1px solid var(--b1);border-radius:var(--rs);cursor:pointer;transition:all .12s;text-align:center;background:var(--s2)}
+/* VOICE GRID */
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px}
+.vopt{padding:7px 5px;border:1px solid var(--b1);border-radius:var(--rs);cursor:pointer;text-align:center;transition:all .12s;background:var(--s2)}
 .vopt.on{border-color:var(--p);background:rgba(14,165,233,.07)}
-.vopt-ico{font-size:16px;display:block;margin-bottom:2px}
-.vopt-nm{font-size:10px;color:var(--mu);font-weight:500;line-height:1.2}
-.vopt.on .vopt-nm{color:var(--p);font-weight:600}
+.vopt-ico{font-size:15px;display:block;margin-bottom:2px}
+.vopt-nm{font-size:9px;color:var(--mu);font-weight:500;line-height:1.3}
+.vopt.on .vopt-nm{color:var(--p);font-weight:700}
 
-/* Aspect + Duration pills */
-.pill-row{display:flex;gap:5px;flex-wrap:wrap}
-.pill{padding:5px 14px;border:1px solid var(--b2);border-radius:20px;background:transparent;color:var(--mu);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;font-weight:500}
-.pill.on{background:var(--p);border-color:var(--p);color:#fff}
+/* ASPECT PILLS */
+.asp-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.asp-pill{padding:5px 12px;border:1px solid var(--b2);border-radius:20px;background:transparent;color:var(--mu);font-size:12px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .12s;font-weight:500}
+.asp-pill.on{background:var(--p);border-color:var(--p);color:#fff}
 
-/* Category tags */
-.cat-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;flex-shrink:0;margin-bottom:10px}
-.cat-row::-webkit-scrollbar{height:2px}
-.cat{padding:5px 14px;border:1px solid var(--b1);border-radius:20px;background:var(--s1);font-size:12px;color:var(--mu);cursor:pointer;white-space:nowrap;font-weight:500;display:flex;align-items:center;gap:4px;transition:all .12s;flex-shrink:0}
-.cat:hover{border-color:var(--b2);color:var(--text)}
-
-/* Progress */
+/* PROGRESS */
 .prog-card{background:var(--s1);border-radius:var(--rr);padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:12px;display:none}
-.prog-card.show{display:block;animation:slideDown .2s ease}
+.prog-card.on{display:block}
 .prog-title{font-size:14px;font-weight:600;margin-bottom:4px}
 .prog-sub{font-size:12px;color:var(--mu);margin-bottom:10px}
 .prog-track{height:4px;background:var(--s3);border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--pu));border-radius:4px;width:0;transition:width .5s ease}
-.prog-steps{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.pstep{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--s3);color:var(--mu);display:flex;align-items:center;gap:4px}
-.pstep.done{background:rgba(34,197,94,.1);color:var(--gr)}
-.pstep.active{background:rgba(14,165,233,.1);color:var(--p);font-weight:600}
+.prog-fill{height:100%;background:var(--p);border-radius:4px;width:0;transition:width .5s}
 
-/* Results */
-.results-scroll{flex:1;overflow-y:auto;padding-bottom:20px}
-.results-scroll::-webkit-scrollbar{width:4px}
-.results-scroll::-webkit-scrollbar-thumb{background:var(--b2);border-radius:4px}
-.result-card{background:var(--s1);border-radius:var(--rr);padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:12px;display:none;animation:slideDown .3s ease}
-.result-card.show{display:block}
+/* RESULT CARD */
+.rcard{background:var(--s1);border-radius:var(--rr);padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:12px;display:none}
+.rcard.on{display:block}
+.rhead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.rtitle{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.rsub{font-size:12px;color:var(--mu);margin-top:3px}
+.ract-row{display:flex;gap:6px;flex-wrap:wrap}
+.ract{padding:6px 12px;border:1px solid var(--b1);background:transparent;color:var(--mu);border-radius:var(--rs);font-size:11px;font-weight:500;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .12s;display:flex;align-items:center;gap:4px}
+.ract:hover{background:var(--s2);color:var(--text)}
+.ract.rp{background:var(--p);border-color:var(--p);color:#fff}
+.rmeta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;padding:10px;background:var(--s2);border-radius:var(--rs)}
+.rmi{text-align:center}
+.rmi-v{font-size:14px;font-weight:700}
+.rmi-l{font-size:10px;color:var(--mu);margin-top:1px;text-transform:uppercase}
 
-/* Brief overview */
-.brief-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px}
-.brief-title{font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--text);line-height:1.3}
-.brief-sub{font-size:12px;color:var(--mu);margin-top:3px}
-.bacts{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
-.bact{padding:6px 13px;border:1px solid var(--b1);background:transparent;color:var(--mu);border-radius:var(--rs);font-size:11px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;display:flex;align-items:center;gap:4px;white-space:nowrap}
-.bact:hover{background:var(--s2);color:var(--text)}
-.bact.bp{background:var(--p);border-color:var(--p);color:#fff}.bact.bp:hover{background:var(--p2)}
-.brief-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;padding:10px 14px;background:var(--s2);border-radius:var(--rs)}
-.bm-item{text-align:center}
-.bm-val{font-size:13px;font-weight:600;color:var(--text)}
-.bm-lbl{font-size:10px;color:var(--mu);margin-top:1px;text-transform:uppercase;letter-spacing:.04em}
+/* HOOK/CTA CARDS */
+.hook-card{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.15);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px}
+.hook-lbl{font-size:10px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.hook-text{font-size:13px;font-weight:500}
+.cta-card{background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.15);border-radius:var(--rs);padding:10px 12px;margin-top:10px}
+.hash-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.htag{padding:2px 9px;border:1px solid var(--b2);border-radius:20px;font-size:11px;color:var(--p);cursor:pointer}
 
-/* Scene cards */
-.scenes-list{display:flex;flex-direction:column;gap:10px}
-.sc{background:var(--s2);border-radius:var(--rr);overflow:hidden;border:1px solid var(--b1);transition:box-shadow .15s;animation:fadeUp .3s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.sc:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
-.sc-top{display:flex;gap:10px;padding:12px 14px;align-items:center;border-bottom:1px solid var(--b1)}
-.sc-num{width:26px;height:26px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.sc-ttl{font-size:13px;font-weight:600;flex:1;color:var(--text)}
-.sc-dur{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--s1);border:1px solid var(--b1);color:var(--mu);font-weight:500}
-
-/* Frame area */
-.sc-frame{position:relative;background:var(--s3);overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}
+/* SCENE CARDS */
+.scene-list{display:flex;flex-direction:column;gap:10px}
+.sc{background:var(--s2);border-radius:var(--rr);overflow:hidden;border:1px solid var(--b1);transition:box-shadow .15s}
+.sc:hover{box-shadow:0 3px 12px rgba(0,0,0,.1)}
+.sc-top{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--b1)}
+.sc-num{width:24px;height:24px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.sc-ttl{font-size:13px;font-weight:600;flex:1}
+.sc-dur{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--s1);border:1px solid var(--b1);color:var(--mu)}
+.sc-frame{position:relative;background:#e2e8f0;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .sc-frame.land{aspect-ratio:16/9}
 .sc-frame.port{aspect-ratio:9/16;max-height:200px}
-.sc-frame.sq{aspect-ratio:1/1;max-height:200px}
+.sc-frame.sq{aspect-ratio:1/1;max-height:180px}
 .sc-frame img,.sc-frame video{width:100%;height:100%;object-fit:cover;display:block}
-.frame-ph{display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--mu2)}
-.frame-ph-ico{font-size:28px;opacity:.3}
-.gen-frame-btn{padding:6px 14px;background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);color:var(--p);border-radius:20px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;font-weight:600}
-.gen-frame-btn:hover{background:rgba(14,165,233,.2)}
-.gen-frame-btn:disabled{opacity:.35;cursor:not-allowed}
-.frame-dur{position:absolute;bottom:7px;left:7px;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:9px;font-size:10px;color:#fff;font-weight:600;backdrop-filter:blur(4px)}
-.frame-tr{position:absolute;bottom:7px;right:7px;background:rgba(14,165,233,.5);padding:2px 8px;border-radius:9px;font-size:9px;color:#fff;backdrop-filter:blur(4px);text-transform:uppercase;letter-spacing:.04em}
-.ost-overlay{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-size:13px;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.8);padding:0 12px;font-style:italic}
+.fph{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--mu2)}
+.fph-ico{font-size:26px;opacity:.3}
+.fph-lbl{font-size:11px}
+.gfbtn{padding:5px 13px;background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);color:var(--p);border-radius:20px;font-size:11px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-top:4px;font-weight:600}
+.gfbtn:disabled{opacity:.35;cursor:not-allowed}
+.fdur{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.55);padding:2px 7px;border-radius:8px;font-size:9px;color:#fff;font-weight:600}
+.ftr{position:absolute;bottom:6px;right:6px;background:rgba(14,165,233,.5);padding:2px 7px;border-radius:8px;font-size:9px;color:#fff}
+.ost-ov{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:12px;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.9);padding:0 10px;font-style:italic}
 .spin{animation:sp 1s linear infinite;display:inline-block}
 @keyframes sp{to{transform:rotate(360deg)}}
-
-/* Scene body */
-.sc-body{padding:10px 14px}
-.sc-narr{font-size:13px;color:var(--mu);line-height:1.75;border-left:2px solid rgba(14,165,233,.3);padding-left:10px;margin-bottom:8px;font-style:italic}
-.sc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
-.sc-tag{font-size:10px;padding:2px 8px;border-radius:7px;background:var(--s1);border:1px solid var(--b1);color:var(--mu);font-weight:500}
-.sc-tag-p{background:rgba(14,165,233,.07);border-color:rgba(14,165,233,.2);color:var(--p)}
-.sc-tag-g{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2);color:var(--gr)}
-.sc-tag-a{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.2);color:var(--am)}
-.sc-acts{display:flex;gap:5px;flex-wrap:wrap}
-.sca{padding:4px 9px;border:1px solid var(--b1);border-radius:6px;background:transparent;color:var(--mu);font-size:10px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .1s;display:flex;align-items:center;gap:3px;font-weight:500}
+.sc-body{padding:10px 12px}
+.sc-narr{font-size:12px;color:var(--mu);line-height:1.7;border-left:2px solid rgba(14,165,233,.3);padding-left:8px;margin-bottom:7px;font-style:italic}
+.sc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.sc-tag{font-size:10px;padding:2px 7px;border-radius:6px;background:var(--s1);border:1px solid var(--b1);color:var(--mu)}
+.sc-acts{display:flex;gap:4px;flex-wrap:wrap}
+.sca{padding:3px 8px;border:1px solid var(--b1);border-radius:5px;background:transparent;color:var(--mu);font-size:10px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .1s}
 .sca:hover{background:var(--s3);color:var(--text)}
-.sca.tts{border-color:rgba(14,165,233,.2);color:var(--p);background:rgba(14,165,233,.05)}
+.aud-row{display:flex;align-items:center;gap:8px;margin-top:6px;padding:6px 10px;background:rgba(14,165,233,.05);border-radius:var(--rs);border:1px solid rgba(14,165,233,.1)}
+.aud-row audio{flex:1;height:28px}
 
-/* Audio player */
-.audio-row{display:flex;align-items:center;gap:8px;margin-top:6px;padding:6px 10px;background:rgba(14,165,233,.05);border-radius:var(--rs);border:1px solid rgba(14,165,233,.1)}
-.audio-row audio{flex:1;height:28px}
-audio::-webkit-media-controls-panel{background:transparent}
-
-/* Stock results */
-.stock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
-.stock-item{border-radius:var(--rs);overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .12s;position:relative}
-.stock-item:hover{border-color:var(--p)}
-.stock-item.selected{border-color:var(--p);box-shadow:0 0 0 3px rgba(14,165,233,.2)}
-.stock-item img,.stock-item video{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.stock-src{position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.6);padding:1px 6px;border-radius:6px;font-size:9px;color:#fff}
-.use-btn{position:absolute;inset:0;background:rgba(14,165,233,.0);display:flex;align-items:center;justify-content:center;opacity:0;transition:all .15s}
-.stock-item:hover .use-btn{opacity:1;background:rgba(14,165,233,.3)}
-.use-btn span{background:var(--p);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
-
-/* ═══ SHOWROOM (below) ═══ */
-.showroom{background:var(--s1);border-radius:var(--rr);padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);flex-shrink:0;margin-bottom:12px}
-.sr-title{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);display:flex;align-items:center;gap:8px}
-.sr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.sr-card{border-radius:var(--rs);overflow:hidden;cursor:pointer;transition:all .12s;background:var(--s3)}
-.sr-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
-.sr-thumb{aspect-ratio:16/9;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px}
-.sr-lbl{padding:5px 8px;font-size:11px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sr-sub{padding:0 8px 5px;font-size:10px;color:var(--mu)}
-
-/* ═══ PROJECTS PAGE ═══ */
-.proj-inner{max-width:900px;margin:0 auto;padding:20px 16px 60px;width:100%}
-.proj-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.proj-title{font-size:18px;font-weight:700}
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.proj-card{background:var(--s1);border-radius:var(--rr);overflow:hidden;cursor:pointer;transition:all .15s;border:1px solid var(--b1)}
-.proj-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
-.proj-thumb{aspect-ratio:16/9;background:var(--s3);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.3}
-.proj-thumb img{width:100%;height:100%;object-fit:cover;opacity:1}
-.proj-body{padding:10px 12px}
-.proj-ttl{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
-.proj-meta{font-size:11px;color:var(--mu);display:flex;gap:8px;flex-wrap:wrap}
-.proj-tag{padding:2px 7px;border-radius:6px;background:var(--s2);font-size:10px}
-.proj-empty{text-align:center;padding:60px;color:var(--mu2)}
-
-/* ═══ ASSETS PAGE ═══ */
-.assets-inner{max-width:900px;margin:0 auto;padding:20px 16px 60px;width:100%}
-.assets-form{background:var(--s1);border-radius:var(--rr);padding:14px 16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
-.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:10px}
-.ai-card{background:var(--s1);border-radius:var(--rs);overflow:hidden;border:1px solid var(--b1);transition:all .12s}
-.ai-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
-.ai-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.ai-foot{padding:6px 9px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--mu)}
-.dl-a{padding:2px 7px;border:1px solid var(--b1);border-radius:4px;background:transparent;color:var(--mu);font-size:10px;cursor:pointer;text-decoration:none;transition:all .1s}
-.dl-a:hover{background:var(--s2);color:var(--text)}
-
-/* ═══ COMMON ═══ */
-.fi{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:7px 10px;font-size:12px;color:var(--text);font-family:'Inter',sans-serif;transition:border-color .2s}
-.fi:focus{outline:none;border-color:var(--p)}
-.fi::placeholder{color:var(--mu2)}
-select.fi option{background:#fff}
-.fl{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;display:block}
-.big-btn{padding:10px 20px;background:var(--p);color:#fff;border:none;border-radius:var(--rx);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:7px}
-.big-btn:hover{background:var(--p2)}
-.big-btn:disabled{opacity:.4;cursor:not-allowed}
-
-/* ═══ TOAST ═══ */
-.toast{position:fixed;bottom:18px;right:18px;background:var(--text);color:#fff;border-radius:var(--rs);padding:9px 16px;font-size:12px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .22s;pointer-events:none;max-width:300px;font-weight:500}
+/* TOAST */
+.toast{position:fixed;bottom:18px;right:18px;background:var(--text);color:#fff;border-radius:var(--rs);padding:9px 16px;font-size:12px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .22s;pointer-events:none;font-weight:500;max-width:300px}
 .toast.on{opacity:1;transform:translateY(0)}
 .toast.ok{background:var(--gr)}
 .toast.er{background:var(--re)}
 .toast.in{background:var(--p)}
 
+/* SHOWROOM */
+.showroom{background:var(--s1);border-radius:var(--rr);padding:14px 16px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:12px}
+.sr-title{font-size:13px;font-weight:700;margin-bottom:10px}
+.sr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.src{border-radius:var(--rs);overflow:hidden;cursor:pointer;transition:all .12s;background:var(--s3)}
+.src:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.src-thumb{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:22px}
+.src-lbl{padding:5px 7px;font-size:10px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ASSETS PAGE */
+.assets{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+.assets h2{font-size:18px;font-weight:700;margin-bottom:14px}
+.aform{background:var(--s1);border-radius:var(--rr);padding:14px 16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:10px}
+.ai-card{background:var(--s1);border-radius:var(--rs);overflow:hidden;border:1px solid var(--b1)}
+.ai-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.ai-foot{padding:6px 9px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--mu)}
+.dl-a{padding:2px 7px;border:1px solid var(--b1);border-radius:4px;background:transparent;color:var(--mu);font-size:10px;text-decoration:none}
+
+/* PROJECTS PAGE */
+.projs{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+.projs h2{font-size:18px;font-weight:700;margin-bottom:14px}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.proj-card{background:var(--s1);border-radius:var(--rr);overflow:hidden;cursor:pointer;border:1px solid var(--b1);transition:all .15s}
+.proj-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.proj-thumb{aspect-ratio:16/9;background:var(--s3);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--mu2)}
+.proj-thumb img{width:100%;height:100%;object-fit:cover}
+.proj-body{padding:10px 12px}
+.proj-ttl{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
+.proj-meta{font-size:11px;color:var(--mu);display:flex;gap:6px;flex-wrap:wrap}
+.proj-tag{padding:2px 6px;border-radius:5px;background:var(--s2)}
+
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
-
-/* API STATUS MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;display:none;align-items:center;justify-content:center}
-.modal-bg.show{display:flex}
-.modal{background:var(--s1);border-radius:var(--rr);padding:20px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.api-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b1)}
-.api-row:last-child{border-bottom:none}
-.api-name{font-size:13px;font-weight:500}
-.api-note{font-size:11px;color:var(--mu);margin-top:1px}
-.api-ok{font-size:11px;padding:2px 8px;border-radius:8px;font-weight:600}
-.api-ok.y{background:rgba(34,197,94,.1);color:var(--gr)}
-.api-ok.n{background:rgba(245,158,11,.1);color:var(--am)}
-
-@media(max-width:600px){.sp-grid{grid-template-columns:1fr}.voice-grid{grid-template-columns:repeat(3,1fr)}.brief-meta{grid-template-columns:1fr 1fr}.sr-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr}.rmeta{grid-template-columns:1fr 1fr}.sr-grid{grid-template-columns:1fr 1fr}.vgrid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
 <div class="top">
-  <div class="logo">
-    <div class="logo-ico">DF</div>
-    <div class="logo-nm">Dream<span>Forge</span></div>
-  </div>
-  <div class="top-modes">
-    <button class="tmd on" onclick="goPage('create',this)">Create</button>
-    <button class="tmd" onclick="goPage('projects',this)">My Projects</button>
-    <button class="tmd" onclick="goPage('assets',this)">Assets</button>
+  <div class="logo"><div class="logo-box">DF</div><div class="logo-nm">Dream<span>Forge</span></div></div>
+  <div class="top-nav">
+    <button class="tnav on" id="tnav-create" onclick="goPage('create',this)">Create</button>
+    <button class="tnav" id="tnav-projects" onclick="goPage('projects',this)">My Projects</button>
+    <button class="tnav" id="tnav-assets" onclick="goPage('assets',this)">Assets</button>
   </div>
   <div class="top-r">
-    <div class="api-chip" onclick="showAPIs()">
-      <div class="sdot" id="sdot"></div>
-      <span id="stxt">APIs</span>
-    </div>
-    <button class="cred-btn" onclick="showAPIs()">&#9889; API Status</button>
+    <div class="api-chip" onclick="checkStatus()"><div class="sdot" id="sdot"></div><span id="stxt">Checking...</span></div>
+    <button class="api-btn" onclick="checkStatus()">⚡ API Status</button>
   </div>
 </div>
 
-<div class="main">
-<div class="content" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
-
-<!-- ══════════════════ CREATE PAGE ══════════════════ -->
+<!-- ===== CREATE PAGE ===== -->
 <div id="pg-create" class="page on">
-<div class="create-wrap">
-
-  <!-- Hero -->
+<div class="create">
   <div class="hero">
-    <div class="hero-title">Direct your videos, all in one canvas.</div>
-    <div class="hero-sub">Powered by free AI APIs — Pollinations · Groq · Pixabay · Edge-TTS · HuggingFace</div>
+    <h1>Direct your videos, all in one canvas.</h1>
+    <p>Powered by free AI APIs — Pollinations · Groq · Gemini · Pixabay · Edge-TTS</p>
   </div>
 
-  <!-- Prompt Card -->
-  <div class="prompt-card">
-    <textarea class="prompt-area" id="mainPrompt" placeholder="Create videos with AI. What story do you want to tell?&#10;&#10;Try: 'A lone lighthouse keeper tells his story of solitude and hope...'" rows="3" oninput="autoResize(this)"></textarea>
-    <div class="prompt-bar">
-      <div class="pbar-left">
-        <!-- Mode -->
-        <div class="mode-toggle">
-          <button class="mode-btn on" id="modeClip" onclick="selMode('clip',this)">&#9654; Video clip</button>
-          <button class="mode-btn" id="modeFull" onclick="selMode('full',this)">&#127916; Full video</button>
-        </div>
-        <!-- Settings toggle -->
-        <button class="settings-pill" id="settingsToggle" onclick="toggleSettings()">&#9881; Settings</button>
-        <!-- Aspect indicator -->
-        <div class="settings-pill" id="aspectIndicator" style="cursor:default;color:var(--mu)">16:9</div>
-        <!-- Duration indicator -->
-        <div class="settings-pill" id="durIndicator" style="cursor:default;color:var(--mu)">Auto</div>
+  <!-- PROMPT CARD -->
+  <div class="pcard">
+    <textarea id="mainPrompt" rows="3" placeholder="Apni video ka idea likho...&#10;&#10;Masalan: A magical forest journey in Ghibli style... Ya: Pakistan ki qadeem tehzeeb ki kahani..."></textarea>
+    <div class="pbar">
+      <div class="mode-row">
+        <button class="mdbtn on" id="btn-clip" onclick="setMode('clip',this)">▶ Video clip</button>
+        <button class="mdbtn" id="btn-full" onclick="setMode('full',this)">🎬 Full video</button>
       </div>
-      <button class="gen-btn" id="mainGenBtn" onclick="generateBrief()">
-        <span id="mainGenTxt">&#10148; Generate</span>
-      </button>
+      <button class="settings-pill" id="settBtn" onclick="toggleSettings()">⚙ Settings</button>
+      <span class="ind-pill" id="aspInd">16:9</span>
+      <span class="ind-pill" id="durInd">30s</span>
+      <button class="gen-btn" id="genBtn" onclick="doGenerate()">▶ Generate</button>
     </div>
   </div>
 
-  <!-- Settings Panel -->
-  <div class="settings-panel" id="settingsPanel">
-    <div class="sp-grid">
-      <!-- Visual Style -->
-      <div class="sp-full">
-        <label class="sp-lbl">&#127912; Visual Style</label>
-        <div class="style-scroll" id="styleScroll"></div>
+  <!-- SETTINGS PANEL -->
+  <div class="spanel" id="spanel">
+
+    <!-- DURATION -->
+    <div class="dur-section">
+      <div class="dur-title" id="durTitle">📹 Video Clip Duration</div>
+      <div class="clip-pills" id="clipDurs">
+        <button class="clip-pill" data-v="5s" onclick="setDur(this,'clip')">5s</button>
+        <button class="clip-pill on" data-v="8s" onclick="setDur(this,'clip')">8s</button>
+        <button class="clip-pill" data-v="10s" onclick="setDur(this,'clip')">10s</button>
+        <button class="clip-pill" data-v="12s" onclick="setDur(this,'clip')">12s</button>
+        <button class="clip-pill" data-v="15s" onclick="setDur(this,'clip')">15s</button>
       </div>
-      <!-- Voice -->
-      <div class="sp-full">
-        <label class="sp-lbl">&#127908; Narrator Voice</label>
-        <div class="voice-grid" id="voiceGrid"></div>
+      <div class="full-pills" id="fullDurs" style="display:none">
+        <button class="full-pill on" data-v="15s" onclick="setDur(this,'full')">15s</button>
+        <button class="full-pill" data-v="30s" onclick="setDur(this,'full')">30s</button>
+        <button class="full-pill" data-v="1 min" onclick="setDur(this,'full')">1 min</button>
+        <button class="full-pill" data-v="3 min" onclick="setDur(this,'full')">3 min</button>
+        <button class="full-pill" data-v="5 min" onclick="setDur(this,'full')">5 min</button>
+        <button class="full-pill" data-v="10 min" onclick="setDur(this,'full')">10 min</button>
       </div>
-      <!-- Aspect Ratio -->
-      <div>
-        <label class="sp-lbl">Aspect Ratio</label>
-        <div class="pill-row" id="aspectRow">
-          <button class="pill" data-v="21:9" onclick="selAspect(this)">21:9</button>
-          <button class="pill on" data-v="16:9" onclick="selAspect(this)">16:9</button>
-          <button class="pill" data-v="4:3" onclick="selAspect(this)">4:3</button>
-          <button class="pill" data-v="1:1" onclick="selAspect(this)">1:1</button>
-          <button class="pill" data-v="3:4" onclick="selAspect(this)">3:4</button>
-          <button class="pill" data-v="9:16" onclick="selAspect(this)">9:16</button>
-        </div>
+    </div>
+
+    <!-- VISUAL STYLE -->
+    <label class="sp-lbl">🎨 Visual Style</label>
+    <div class="style-scroll" id="styleScroll"></div>
+
+    <!-- VOICE -->
+    <label class="sp-lbl">🎤 Narrator Voice</label>
+    <div class="vgrid" id="voiceGrid"></div>
+
+    <!-- ASPECT RATIO -->
+    <label class="sp-lbl">📐 Aspect Ratio</label>
+    <div class="asp-row" id="aspRow">
+      <button class="asp-pill" data-v="21:9" onclick="setAsp(this)">21:9</button>
+      <button class="asp-pill on" data-v="16:9" onclick="setAsp(this)">16:9</button>
+      <button class="asp-pill" data-v="4:3" onclick="setAsp(this)">4:3</button>
+      <button class="asp-pill" data-v="1:1" onclick="setAsp(this)">1:1</button>
+      <button class="asp-pill" data-v="9:16" onclick="setAsp(this)">9:16</button>
+    </div>
+
+    <!-- VIDEO ENGINE -->
+    <label class="sp-lbl">🎬 Scene Media Type</label>
+    <div class="asp-row" id="mediaRow" style="margin-bottom:12px">
+      <button class="asp-pill on" data-v="image" onclick="setMedia(this)">🖼 AI Image</button>
+      <button class="asp-pill" data-v="stock_video" onclick="setMedia(this)">📹 Stock Video</button>
+      <button class="asp-pill" data-v="ai_video" onclick="setMedia(this)">🤖 AI Video Clip</button>
+    </div>
+
+    <!-- PLATFORM + LANGUAGE -->
+    <div class="grid2">
+      <div><label class="sp-lbl">Platform</label>
+        <select class="sp-sel" id="platSel">
+          <option value="youtube">YouTube</option>
+          <option value="tiktok">TikTok</option>
+          <option value="reels">Instagram Reels</option>
+          <option value="youtube_shorts">YouTube Shorts</option>
+        </select>
       </div>
-      <!-- Duration -->
-      <div>
-        <label class="sp-lbl">Duration</label>
-        <div class="pill-row" id="durRow">
-          <button class="pill on" data-v="auto" onclick="selDur(this)">Auto</button>
-          <button class="pill" data-v="15s" onclick="selDur(this)">15s</button>
-          <button class="pill" data-v="30s" onclick="selDur(this)">30s</button>
-          <button class="pill" data-v="1 min" onclick="selDur(this)">1 min</button>
-          <button class="pill" data-v="3 min" onclick="selDur(this)">3 min</button>
-          <button class="pill" data-v="5 min" onclick="selDur(this)">5 min</button>
-          <button class="pill" data-v="10 min" onclick="selDur(this)">10 min</button>
-        </div>
-      </div>
-      <!-- Platform + Language -->
-      <div>
-        <label class="sp-lbl">Platform & Language</label>
-        <div style="display:flex;gap:6px">
-          <select class="sp-sel" id="platSel" style="flex:1">
-            <option value="youtube">YouTube</option>
-            <option value="tiktok">TikTok</option>
-            <option value="reels">Instagram Reels</option>
-            <option value="youtube_shorts">YouTube Shorts</option>
-          </select>
-          <select class="sp-sel" id="langSel" style="flex:1">
-            <option value="English">English</option>
-            <option value="Urdu Roman">Urdu (Roman)</option>
-            <option value="pure Urdu">Urdu (Pure)</option>
-            <option value="Hindi">Hindi</option>
-          </select>
-        </div>
+      <div><label class="sp-lbl">Language</label>
+        <select class="sp-sel" id="langSel">
+          <option value="English">English</option>
+          <option value="Urdu Roman script">Urdu (Roman)</option>
+          <option value="pure Urdu">Urdu (Pure)</option>
+          <option value="Hindi">Hindi</option>
+        </select>
       </div>
     </div>
   </div>
 
-  <!-- Category Tags -->
-  <div class="cat-row" id="catRow"></div>
-
-  <div class="results-scroll" id="resultsScroll">
-
-    <!-- Progress -->
-    <div class="prog-card" id="progCard">
-      <div class="prog-title" id="progTitle">Generating your video...</div>
-      <div class="prog-sub" id="progSub">AI is creating your brief</div>
-      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
-      <div class="prog-steps" id="progSteps"></div>
-    </div>
-
-    <!-- Result: Brief -->
-    <div class="result-card" id="briefCard">
-      <div class="brief-header">
-        <div>
-          <div class="brief-title" id="briefTitle"></div>
-          <div class="brief-sub" id="briefSub"></div>
-        </div>
-        <div class="bacts">
-          <button class="bact" onclick="genAllImages()">&#128444; Images</button>
-          <button class="bact" onclick="genAllTTS()">&#128266; Voices</button>
-          <button class="bact" onclick="genAllClips()">&#127916; Clips</button>
-          <button class="bact" onclick="copyScript()">&#128203; Copy</button>
-          <button class="bact" onclick="saveProject()">&#128190; Save</button>
-          <button class="bact bp" onclick="genAllImages()">&#9654; Generate All</button>
-        </div>
-      </div>
-      <div class="brief-meta" id="briefMeta"></div>
-      <!-- Hook -->
-      <div id="hookCard" style="background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.15);border-radius:var(--rs);padding:10px 12px;margin-bottom:12px;display:none">
-        <div style="font-size:10px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">&#9889; Hook — First 3 seconds</div>
-        <div id="hookText" style="font-size:13px;font-weight:500;color:var(--text)"></div>
-      </div>
-      <!-- Scenes -->
-      <div class="scenes-list" id="scenesList"></div>
-      <!-- CTA -->
-      <div id="ctaCard" style="background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.15);border-radius:var(--rs);padding:10px 12px;margin-top:10px;display:none">
-        <div style="font-size:10px;font-weight:700;color:var(--pu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">&#127775; Call to Action</div>
-        <div id="ctaText" style="font-size:13px;color:var(--mu)"></div>
-      </div>
-      <!-- Hashtags -->
-      <div id="hashCard" style="margin-top:10px;display:none">
-        <div style="font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Hashtags</div>
-        <div id="hashTags" style="display:flex;flex-wrap:wrap;gap:4px"></div>
-      </div>
-    </div>
-
-    <!-- Showroom -->
-    <div class="showroom" id="showroom">
-      <div class="sr-title">&#127917; CapCut Showroom — Example Styles</div>
-      <div class="sr-grid" id="srGrid"></div>
-    </div>
-
-  </div><!-- /results-scroll -->
-</div><!-- /create-wrap -->
-</div><!-- /pg-create -->
-
-<!-- ══════════════════ PROJECTS PAGE ══════════════════ -->
-<div id="pg-projects" class="page">
-  <div class="proj-inner">
-    <div class="proj-h">
-      <div class="proj-title">&#128190; My Projects</div>
-      <button class="bact" onclick="clearProjects()">&#128465; Clear All</button>
-    </div>
-    <div id="projGrid"></div>
+  <!-- PROGRESS -->
+  <div class="prog-card" id="progCard">
+    <div class="prog-title" id="progTitle">Generating...</div>
+    <div class="prog-sub" id="progSub">AI script likh raha hai...</div>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
   </div>
+
+  <!-- RESULT -->
+  <div class="rcard" id="rcard">
+    <div class="rhead">
+      <div><div class="rtitle" id="rTitle"></div><div class="rsub" id="rSub"></div></div>
+      <div class="ract-row">
+        <button class="ract" onclick="doAllImages()">🖼 Images</button>
+        <button class="ract" onclick="doAllTTS()">🔊 Voices</button>
+        <button class="ract" onclick="doAllClips()">🎬 Clips</button>
+        <button class="ract" onclick="copyScript()">📋 Copy</button>
+        <button class="ract" onclick="saveProject()">💾 Save</button>
+        <button class="ract rp" onclick="doAllSmart()">▶ Generate All</button>
+      </div>
+    </div>
+    <div class="rmeta" id="rMeta"></div>
+    <div class="hook-card" id="hookCard" style="display:none">
+      <div class="hook-lbl">⚡ Hook — First 3 seconds</div>
+      <div class="hook-text" id="hookText"></div>
+    </div>
+    <div class="scene-list" id="sceneList"></div>
+    <div class="cta-card" id="ctaCard" style="display:none">
+      <div class="hook-lbl" style="color:#8b5cf6">✨ Call to Action</div>
+      <div id="ctaText" style="font-size:13px;color:var(--mu)"></div>
+    </div>
+    <div class="hash-row" id="hashRow"></div>
+  </div>
+
+  <!-- SHOWROOM -->
+  <div class="showroom" id="showroom">
+    <div class="sr-title">🎭 Example Styles — Click to try</div>
+    <div class="sr-grid" id="srGrid"></div>
+  </div>
+
+</div>
 </div>
 
-<!-- ══════════════════ ASSETS PAGE ══════════════════ -->
+<!-- ===== PROJECTS PAGE ===== -->
+<div id="pg-projects" class="page">
+<div class="projs">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <h2>💾 My Projects</h2>
+    <button class="ract" onclick="clearProjects()">🗑 Clear All</button>
+  </div>
+  <div class="proj-grid" id="projGrid"></div>
+</div>
+</div>
+
+<!-- ===== ASSETS PAGE ===== -->
 <div id="pg-assets" class="page">
-  <div class="assets-inner">
-    <div style="font-size:18px;font-weight:700;margin-bottom:14px">&#128444; Asset Generator</div>
-    <div class="assets-form">
-      <div class="ag">
-        <div><label class="fl">Prompt</label><input class="fi" id="asPrompt" type="text" placeholder="Describe what you want..."/></div>
-        <div><label class="fl">Style</label><select class="fi" id="asStyle"><option value="none">None (Auto)</option></select></div>
-        <div><label class="fl">Size</label><select class="fi" id="asSize"><option value="1280,720">16:9 (1280×720)</option><option value="720,1280">9:16 (720×1280)</option><option value="1024,1024">1:1 (1024×1024)</option><option value="1920,1080">Full HD</option></select></div>
+<div class="assets">
+  <h2>🖼 Asset Generator</h2>
+  <div class="aform">
+    <div class="grid3" style="margin-bottom:10px">
+      <div><label class="sp-lbl">Prompt</label><input class="sp-sel" id="asPrompt" type="text" placeholder="Describe image..." style="margin:0"/></div>
+      <div><label class="sp-lbl">Style</label><select class="sp-sel" id="asStyle" style="margin:0"></select></div>
+      <div><label class="sp-lbl">Size</label>
+        <select class="sp-sel" id="asSize" style="margin:0">
+          <option value="1280,720">16:9 Landscape</option>
+          <option value="720,1280">9:16 Portrait</option>
+          <option value="1024,1024">1:1 Square</option>
+        </select>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <select class="fi" style="width:120px" id="asCount"><option value="1">1</option><option value="2">2</option><option value="4" selected>4</option><option value="6">6</option></select>
-        <button class="big-btn" id="asBtn" onclick="genAssets()">&#10024; Generate Images</button>
-      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select class="sp-sel" style="width:100px;margin:0" id="asCount"><option value="1">1</option><option value="2">2</option><option value="4" selected>4</option></select>
+      <button class="gen-btn" style="margin-left:0" id="asBtn" onclick="genAssets()">✨ Generate</button>
     </div>
     <div class="ai-grid" id="asGrid"></div>
   </div>
 </div>
-
-</div><!-- /content -->
-</div><!-- /main -->
-
-<!-- API Status Modal -->
-<div class="modal-bg" id="apiModal" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-title">API Status <span onclick="closeModal()" style="cursor:pointer;font-size:18px;color:var(--mu)">&#10005;</span></div>
-    <div id="apiList"></div>
-    <div style="margin-top:14px;padding:10px;background:var(--s2);border-radius:var(--rs);font-size:11px;color:var(--mu);line-height:1.7">
-      <strong>Free APIs — no limits:</strong><br>
-      ✓ Pollinations.ai — images (always free)<br>
-      ✓ Edge-TTS — voiceover 400+ voices (always free)<br>
-      <br><strong>Free with key:</strong><br>
-      ✓ Groq — groq.com (free 30rpm)<br>
-      ✓ Pixabay — pixabay.com/api (free 5000/hr)<br>
-      ✓ Pexels — pexels.com/api (free 200/hr)<br>
-      ✓ HuggingFace — huggingface.co (free token)<br>
-      ✓ ElevenLabs — elevenlabs.io (10k chars/month free)<br>
-    </div>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════════
-const B = window.location.hostname==='localhost' ? 'http://localhost:5000' : '';
-let selStyle='none', selVoice='aria', selAspect='16:9', selDur='auto', selMode='clip';
-let curBrief=null, curW=1280, curH=720;
-let sceneImages={}, sceneAudios={}, sceneClips={};
-let projects=JSON.parse(localStorage.getItem('df_projects')||'[]');
+// ═══ CONFIG ═══
+const B = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
 
-// ═══════════════════════════════════════════════════
-// VISUAL STYLES (matching CapCut screenshots exactly)
-// ═══════════════════════════════════════════════════
+// ═══ STATE ═══
+let curStyle  = 'none';
+let curVoice  = 'aria';
+let curAspect = '16:9';
+let curDur    = '8s';
+let curMode   = 'clip';  // 'clip' | 'full'
+let curBrief  = null;
+let imgMap    = {};
+let audMap    = {};
+let projects  = JSON.parse(localStorage.getItem('df_proj') || '[]');
+
+// ═══ STYLES DATA ═══
 const STYLES = [
-  {v:'none',       lbl:'None',         ico:'⬜', bg:'#f1f5f9'},
-  {v:'realistic',  lbl:'Realistic Film',ico:'🎬', bg:'#1e293b'},
-  {v:'cartoon3d',  lbl:'Cartoon 3D',   ico:'🎠', bg:'#fde68a'},
-  {v:'photograph', lbl:'Photograph',   ico:'📷', bg:'#e2e8f0'},
-  {v:'whimsical',  lbl:'Whimsical',    ico:'🌸', bg:'#fce7f3'},
-  {v:'felt_dolls', lbl:'Felt Dolls',   ico:'🧸', bg:'#fef3c7'},
-  {v:'crayon',     lbl:'Crayon',       ico:'✏️', bg:'#dbeafe'},
-  {v:'ghibli',     lbl:'Ghibli',       ico:'🌿', bg:'#d1fae5'},
-  {v:'ink_watercolor',lbl:'Ink Watercolor',ico:'🎨',bg:'#ede9fe'},
-  {v:'dark_deco',  lbl:'Dark Deco',    ico:'🌙', bg:'#1e1b4b'},
-  {v:'anime',      lbl:'Anime',        ico:'⚡', bg:'#fdf4ff'},
-  {v:'futuristic', lbl:'Futuristic',   ico:'🚀', bg:'#0f172a'},
-  {v:'cyberpunk',  lbl:'Cyberpunk',    ico:'🌃', bg:'#0c0a09'},
-  {v:'epic_fantasy',lbl:'Epic Fantasy',ico:'🐉', bg:'#1c1917'},
-  {v:'noir_comic', lbl:'Noir Comic',   ico:'🖤', bg:'#111827'},
-  {v:'urban_sketch',lbl:'Urban Sketch',ico:'✒️', bg:'#f8fafc'},
-  {v:'pixel_90s',  lbl:'90s Pixel',   ico:'👾', bg:'#1e1b4b'},
-  {v:'us_comic',   lbl:'US Comic',    ico:'💥', bg:'#fff7ed'},
-  {v:'horror',     lbl:'Horror',      ico:'👻', bg:'#0c0a09'},
-  {v:'roman_art',  lbl:'Roman Art',   ico:'🏛️', bg:'#78350f'},
-  {v:'impressionist',lbl:'Impressionist',ico:'🖼️',bg:'#fef9c3'},
-  {v:'clay',       lbl:'Clay',        ico:'🏺', bg:'#fed7aa'},
-  {v:'low_poly',   lbl:'Low Poly',    ico:'🔷', bg:'#eff6ff'},
-  {v:'nature_photo',lbl:'Nature Photo',ico:'🌿',bg:'#f0fdf4'},
+  {v:'none',       l:'None',         e:'⬜', bg:'#f1f5f9'},
+  {v:'realistic',  l:'Realistic',    e:'🎬', bg:'#1e293b'},
+  {v:'cartoon3d',  l:'Cartoon 3D',   e:'🎠', bg:'#fde68a'},
+  {v:'ghibli',     l:'Ghibli',       e:'🌿', bg:'#d1fae5'},
+  {v:'anime',      l:'Anime',        e:'⚡', bg:'#ede9fe'},
+  {v:'ink_watercolor',l:'Watercolor',e:'🎨', bg:'#e0f2fe'},
+  {v:'dark_deco',  l:'Dark Deco',    e:'🌙', bg:'#1e1b4b'},
+  {v:'cyberpunk',  l:'Cyberpunk',    e:'🌃', bg:'#0c0a09'},
+  {v:'epic_fantasy',l:'Fantasy',     e:'🐉', bg:'#1c1917'},
+  {v:'noir_comic', l:'Noir Comic',   e:'🖤', bg:'#111827'},
+  {v:'horror',     l:'Horror',       e:'👻', bg:'#0c0a09'},
+  {v:'futuristic', l:'Sci-Fi',       e:'🚀', bg:'#0f172a'},
+  {v:'impressionist',l:'Impressionist',e:'🖼️',bg:'#fef9c3'},
+  {v:'roman_art',  l:'Roman Art',    e:'🏛️', bg:'#78350f'},
+  {v:'pixel_90s',  l:'90s Pixel',    e:'👾', bg:'#1e1b4b'},
+  {v:'us_comic',   l:'US Comic',     e:'💥', bg:'#fff7ed'},
+  {v:'clay',       l:'Clay',         e:'🏺', bg:'#fed7aa'},
+  {v:'nature_photo',l:'Nature',      e:'🌿', bg:'#f0fdf4'},
 ];
 
 const VOICES = [
-  {v:'aria',       nm:'Aria',      ico:'👩', note:'US English'},
-  {v:'guy',        nm:'Guy',       ico:'👨', note:'US English'},
-  {v:'jenny',      nm:'Jenny',     ico:'💁', note:'Warm Female'},
-  {v:'musing_female',nm:'Sonia',  ico:'🎤', note:'UK Female'},
-  {v:'dramatic_male',nm:'Davis',  ico:'🎭', note:'Dramatic'},
-  {v:'calm_dubing',nm:'Ana',      ico:'🕊️', note:'Calm'},
-  {v:'sara_urdu',  nm:'Uzma',     ico:'🌺', note:'Urdu Female'},
-  {v:'asad_urdu',  nm:'Asad',     ico:'🌙', note:'Urdu Male'},
-  {v:'hindi_female',nm:'Swara',   ico:'🪷', note:'Hindi Female'},
-  {v:'hindi_male', nm:'Madhur',   ico:'🎵', note:'Hindi Male'},
-  {v:'tony',       nm:'Tony',     ico:'🦸', note:'US Male'},
-  {v:'none',       nm:'No Voice', ico:'🔇', note:'Off'},
-];
-
-const CATEGORIES = [
-  {ico:'🎭', lbl:'AI drama'},
-  {ico:'🔥', lbl:'Trending styles'},
-  {ico:'💡', lbl:'Knowledge'},
-  {ico:'✍️', lbl:'Short story'},
-  {ico:'🌿', lbl:'Nature film'},
-  {ico:'🚀', lbl:'Sci-fi'},
-  {ico:'😂', lbl:'Comedy'},
-  {ico:'💰', lbl:'Finance'},
-  {ico:'🎬', lbl:'Cinematic'},
-  {ico:'🧸', lbl:'Kids content'},
+  {v:'aria',       n:'Aria',    e:'👩', s:'US English'},
+  {v:'guy',        n:'Guy',     e:'👨', s:'US English'},
+  {v:'jenny',      n:'Jenny',   e:'💁', s:'Warm Female'},
+  {v:'musing_female',n:'Sonia', e:'🎤', s:'UK Female'},
+  {v:'dramatic_male',n:'Davis', e:'🎭', s:'Dramatic'},
+  {v:'calm',       n:'Ana',     e:'🕊️', s:'Calm'},
+  {v:'sara_urdu',  n:'Uzma',   e:'🌺', s:'Urdu Female'},
+  {v:'asad_urdu',  n:'Asad',   e:'🌙', s:'Urdu Male'},
+  {v:'hindi_female',n:'Swara', e:'🪷', s:'Hindi Female'},
+  {v:'hindi_male', n:'Madhur', e:'🎵', s:'Hindi Male'},
+  {v:'tony',       n:'Tony',   e:'🦸', s:'US Male'},
+  {v:'none',       n:'No Voice',e:'🔇',s:'Off'},
 ];
 
 const SHOWROOM = [
-  {lbl:'Watercolor Space',style:'ink_watercolor',ico:'🌌',prompt:'vast cosmos nebula stars ink watercolor'},
-  {lbl:'Ghibli Forest',style:'ghibli',ico:'🌿',prompt:'magical forest ghibli anime lush green'},
-  {lbl:'Dark Deco City',style:'dark_deco',ico:'🌆',prompt:'art deco noir city night glamour'},
-  {lbl:'Cyberpunk Night',style:'cyberpunk',ico:'🌃',prompt:'cyberpunk city rain neon lights'},
-  {lbl:'Epic Fantasy',style:'epic_fantasy',ico:'🐉',prompt:'epic dragon castle fantasy mountains'},
-  {lbl:'Roman Empire',style:'roman_art',ico:'🏛️',prompt:'roman colosseum emperor classical art'},
-  {lbl:'90s Pixel Game',style:'pixel_90s',ico:'👾',prompt:'retro pixel game world 90s'},
-  {lbl:'Felt Doll World',style:'felt_dolls',ico:'🧸',prompt:'felt doll cute handmade world'},
+  {l:'Ghibli Forest',  s:'ghibli',      e:'🌿', p:'magical forest ghibli anime lush green',  bg:'#d1fae5'},
+  {l:'Watercolor Space',s:'ink_watercolor',e:'🌌',p:'cosmos nebula stars ink watercolor',   bg:'#ede9fe'},
+  {l:'Dark Deco City', s:'dark_deco',   e:'🌆', p:'art deco noir city night glamour',        bg:'#1e1b4b'},
+  {l:'Cyberpunk Night',s:'cyberpunk',   e:'🌃', p:'cyberpunk city rain neon lights',         bg:'#0c0a09'},
+  {l:'Epic Dragon',    s:'epic_fantasy',e:'🐉', p:'epic dragon castle fantasy mountains',    bg:'#1c1917'},
+  {l:'Roman Empire',   s:'roman_art',   e:'🏛️', p:'roman colosseum emperor classical art',  bg:'#78350f'},
+  {l:'90s Pixel World',s:'pixel_90s',   e:'👾', p:'retro pixel game world 90s adventure',   bg:'#1e1b4b'},
+  {l:'Anime Journey',  s:'anime',       e:'⚡', p:'anime journey beautiful landscape sky',   bg:'#ede9fe'},
 ];
 
-// ═══════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════
-initStyles();
-initVoices();
-initCategories();
-initShowroom();
-initAssetStyleSelect();
-checkStatus();
-setInterval(checkStatus, 20000);
+// ═══ INIT ═══
+function init() {
+  buildStyles();
+  buildVoices();
+  buildShowroom();
+  buildAssetStyles();
+  checkStatus();
+  setInterval(checkStatus, 20000);
+  // Set initial duration display
+  document.getElementById('durInd').textContent = '8s';
+}
 
-function initStyles(){
-  const el=document.getElementById('styleScroll');
-  STYLES.forEach(s=>{
-    el.insertAdjacentHTML('beforeend',`
-      <div class="stc ${s.v==='none'?'on':''}" data-v="${s.v}" onclick="pickStyle(this)">
-        <div class="stc-img" style="background:${s.bg}">${s.ico}</div>
-        <div class="stc-lbl">${s.lbl}</div>
-      </div>`);
+function buildStyles() {
+  const el = document.getElementById('styleScroll');
+  STYLES.forEach(s => {
+    const d = document.createElement('div');
+    d.className = 'stc' + (s.v === 'none' ? ' on' : '');
+    d.dataset.v = s.v;
+    d.innerHTML = `<div class="stc-img" style="background:${s.bg}">${s.e}</div><div class="stc-lbl">${s.l}</div>`;
+    d.onclick = () => {
+      document.querySelectorAll('.stc').forEach(c => c.classList.remove('on'));
+      d.classList.add('on');
+      curStyle = s.v;
+    };
+    el.appendChild(d);
   });
 }
 
-function initVoices(){
-  const el=document.getElementById('voiceGrid');
-  VOICES.forEach(v=>{
-    el.insertAdjacentHTML('beforeend',`
-      <div class="vopt ${v.v==='aria'?'on':''}" data-v="${v.v}" onclick="pickVoice(this)">
-        <span class="vopt-ico">${v.ico}</span>
-        <span class="vopt-nm">${v.nm}<br><span style="font-size:9px;color:var(--mu2)">${v.note}</span></span>
-      </div>`);
+function buildVoices() {
+  const el = document.getElementById('voiceGrid');
+  VOICES.forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'vopt' + (v.v === 'aria' ? ' on' : '');
+    d.dataset.v = v.v;
+    d.innerHTML = `<span class="vopt-ico">${v.e}</span><span class="vopt-nm">${v.n}<br><span style="font-size:8px;color:var(--mu2)">${v.s}</span></span>`;
+    d.onclick = () => {
+      document.querySelectorAll('.vopt').forEach(x => x.classList.remove('on'));
+      d.classList.add('on');
+      curVoice = v.v;
+    };
+    el.appendChild(d);
   });
 }
 
-function initCategories(){
-  const el=document.getElementById('catRow');
-  CATEGORIES.forEach(c=>{
-    el.insertAdjacentHTML('beforeend',`
-      <div class="cat" onclick="useCat('${c.lbl}')">${c.ico} ${c.lbl}</div>`);
+function buildShowroom() {
+  const el = document.getElementById('srGrid');
+  SHOWROOM.forEach(s => {
+    const d = document.createElement('div');
+    d.className = 'src';
+    d.innerHTML = `<div class="src-thumb" style="background:${s.bg}">${s.e}</div><div class="src-lbl">${s.l}</div>`;
+    d.onclick = () => {
+      document.getElementById('mainPrompt').value = s.p;
+      // select style
+      document.querySelectorAll('.stc').forEach(c => {
+        c.classList.remove('on');
+        if (c.dataset.v === s.s) c.classList.add('on');
+      });
+      curStyle = s.s;
+      // open settings
+      document.getElementById('spanel').classList.add('on');
+      document.getElementById('settBtn').classList.add('on');
+      document.getElementById('spanel').scrollIntoView({behavior:'smooth'});
+    };
+    el.appendChild(d);
   });
 }
 
-function initShowroom(){
-  const el=document.getElementById('srGrid');
-  SHOWROOM.forEach((s,i)=>{
-    el.insertAdjacentHTML('beforeend',`
-      <div class="sr-card" onclick="useShowroom('${s.prompt}','${s.style}')">
-        <div class="sr-thumb" style="background:#${['1e293b','0f172a','1e1b4b','0c0a09','1c1917','78350f','1e1b4b','fef3c7'][i]}">${s.ico}</div>
-        <div class="sr-lbl">${s.lbl}</div>
-        <div class="sr-sub">${s.style}</div>
-      </div>`);
+function buildAssetStyles() {
+  const sel = document.getElementById('asStyle');
+  STYLES.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.v; o.textContent = s.l;
+    sel.appendChild(o);
   });
 }
 
-function initAssetStyleSelect(){
-  const sel=document.getElementById('asStyle');
-  STYLES.forEach(s=>sel.insertAdjacentHTML('beforeend',`<option value="${s.v}">${s.lbl}</option>`));
+// ═══ STATUS ═══
+async function checkStatus() {
+  try {
+    const r = await fetch(B + '/api/status', {});
+    const d = await r.json();
+    document.getElementById('sdot').className = d.ok ? 'sdot ok' : 'sdot';
+    document.getElementById('stxt').textContent = d.ok ? 'Online ✓' : 'Offline';
+    showToast('APIs Online ✓', 'ok');
+  } catch(e) {
+    document.getElementById('sdot').className = 'sdot';
+    document.getElementById('stxt').textContent = 'Offline';
+  }
 }
 
-// ═══════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════
-function goPage(name,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.tmd').forEach(b=>b.classList.remove('on'));
-  document.getElementById('pg-'+name).classList.add('on');
-  if(btn) btn.classList.add('on');
-  if(name==='projects') renderProjects();
+// ═══ NAVIGATION ═══
+function goPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tnav').forEach(b => b.classList.remove('on'));
+  document.getElementById('pg-' + name).classList.add('on');
+  if (btn) btn.classList.add('on');
+  if (name === 'projects') renderProjects();
 }
 
-// ═══════════════════════════════════════════════════
-// SELECTORS
-// ═══════════════════════════════════════════════════
-function pickStyle(el){document.querySelectorAll('#styleScroll .stc').forEach(c=>c.classList.remove('on'));el.classList.add('on');selStyle=el.dataset.v}
-function pickVoice(el){document.querySelectorAll('#voiceGrid .vopt').forEach(v=>v.classList.remove('on'));el.classList.add('on');selVoice=el.dataset.v}
-function selAspect(el){document.querySelectorAll('#aspectRow .pill').forEach(b=>b.classList.remove('on'));el.classList.add('on');selAspect=el.dataset.v;document.getElementById('aspectIndicator').textContent=selAspect}
-function selDur(el){document.querySelectorAll('#durRow .pill').forEach(b=>b.classList.remove('on'));el.classList.add('on');selDur=el.dataset.v;document.getElementById('durIndicator').textContent=selDur}
-function selMode(mode,btn){selMode=mode;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on')}
-function toggleSettings(){const p=document.getElementById('settingsPanel');p.classList.toggle('show');document.getElementById('settingsToggle').classList.toggle('active',p.classList.contains('show'))}
-function useCat(lbl){document.getElementById('mainPrompt').value=`Create a ${lbl} video: `;document.getElementById('mainPrompt').focus()}
-function useShowroom(prompt,style){
-  document.getElementById('mainPrompt').value=prompt;
-  document.querySelectorAll('#styleScroll .stc').forEach(c=>{c.classList.remove('on');if(c.dataset.v===style)c.classList.add('on')});
-  selStyle=style;
-  document.getElementById('settingsPanel').classList.add('show');
-  document.getElementById('settingsToggle').classList.add('active');
-}
-function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px'}
-
-function fboxClass(){return selAspect==='9:16'?'port':selAspect==='1:1'?'sq':'land'}
-
-// ═══════════════════════════════════════════════════
-// STATUS
-// ═══════════════════════════════════════════════════
-async function checkStatus(){
-  try{
-    const r=await fetch(B+'/api/status',{signal:AbortSignal.timeout(5000)});
-    const d=await r.json();
-    const anyOk=Object.values(d.apis||{}).some(a=>a.ok);
-    document.getElementById('sdot').className='sdot'+(anyOk?' ok':'');
-    const online=Object.values(d.apis||{}).filter(a=>a.ok).length;
-    document.getElementById('stxt').textContent=`${online} APIs`;
-    window._apiData=d.apis;
-  }catch{document.getElementById('sdot').className='sdot';document.getElementById('stxt').textContent='Offline'}
+// ═══ MODE ═══
+function setMode(mode, btn) {
+  curMode = mode;
+  document.querySelectorAll('.mdbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  // show/hide duration rows
+  const isClip = mode === 'clip';
+  document.getElementById('clipDurs').style.display = isClip ? 'flex' : 'none';
+  document.getElementById('fullDurs').style.display = isClip ? 'none' : 'flex';
+  document.getElementById('durTitle').textContent = isClip ? '📹 Video Clip Duration' : '🎬 Full Video Duration';
+  // reset duration
+  if (isClip) {
+    curDur = '10s';
+    document.querySelectorAll('.clip-pill').forEach(p => { p.classList.remove('on'); if(p.dataset.v==='8s') p.classList.add('on'); });
+  } else {
+    curDur = '1 min';
+    document.querySelectorAll('.full-pill').forEach(p => { p.classList.remove('on'); if(p.dataset.v==='15s') p.classList.add('on'); });
+  }
+  document.getElementById('durInd').textContent = curDur;
 }
 
-function showAPIs(){
-  const d=window._apiData||{};
-  const el=document.getElementById('apiList');
-  el.innerHTML=Object.entries(d).map(([k,v])=>`
-    <div class="api-row">
-      <div><div class="api-name">${v.label}</div><div class="api-note">${v.note||k}</div></div>
-      <div class="api-ok ${v.ok?'y':'n'}">${v.ok?'✓ Active':'✗ Not set'}</div>
-    </div>`).join('');
-  document.getElementById('apiModal').classList.add('show');
+// ═══ DURATION ═══
+function setDur(btn, type) {
+  const sel = type === 'clip' ? '.clip-pill' : '.full-pill';
+  document.querySelectorAll(sel).forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  curDur = btn.dataset.v;
+  document.getElementById('durInd').textContent = curDur;
 }
-function closeModal(){document.getElementById('apiModal').classList.remove('show')}
 
-// ═══════════════════════════════════════════════════
-// GENERATE BRIEF
-// ═══════════════════════════════════════════════════
-async function generateBrief(){
-  const prompt=document.getElementById('mainPrompt').value.trim();
-  if(!prompt){document.getElementById('mainPrompt').focus();toast('Apni video ka idea likho!','er');return}
-  const btn=document.getElementById('mainGenBtn');
-  btn.disabled=true;
-  document.getElementById('mainGenTxt').innerHTML='<span class="spin">&#9696;</span>';
-  curBrief=null;sceneImages={};sceneAudios={};sceneClips={};
+// ═══ ASPECT ═══
+function setAsp(btn) {
+  document.querySelectorAll('.asp-pill').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  curAspect = btn.dataset.v;
+  document.getElementById('aspInd').textContent = curAspect;
+}
 
-  // Show progress
-  showProgress(['Brief AI','Scenes','Styles','Ready']);
+// ═══ SETTINGS TOGGLE ═══
+function toggleSettings() {
+  const p = document.getElementById('spanel');
+  const b = document.getElementById('settBtn');
+  p.classList.toggle('on');
+  b.classList.toggle('on');
+}
 
-  setProgStep(0,'active');setProgFill(10);setProgSub('AI script likh raha hai...');
+// ═══ GENERATE BRIEF ═══
+async function doGenerate() {
+  const prompt = document.getElementById('mainPrompt').value.trim();
+  if (!prompt) { document.getElementById('mainPrompt').focus(); showToast('Apna idea likho!', 'er'); return; }
 
-  try{
-    const r=await fetch(B+'/api/brief/generate',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt,style:selStyle,voice:selVoice,aspect:selAspect,duration:selDur,platform:document.getElementById('platSel').value,mode:selMode,language:document.getElementById('langSel').value}),
-      signal:AbortSignal.timeout(75000)
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⟳</span> Generating...';
+  curBrief = null; imgMap = {}; audMap = {};
+
+  // show progress
+  const pc = document.getElementById('progCard');
+  const pf = document.getElementById('progFill');
+  const ps = document.getElementById('progSub');
+  pc.classList.add('on');
+  document.getElementById('rcard').classList.remove('on');
+  let prog = 0;
+  const pi = setInterval(() => { prog = Math.min(prog + 4, 82); pf.style.width = prog + '%'; }, 350);
+  ps.textContent = 'AI script likh raha hai...';
+
+  try {
+    const r = await fetch(B + '/api/brief/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        prompt,
+        style:    curStyle,
+        voice:    curVoice,
+        aspect:   curAspect,
+        duration: curDur,
+        platform: document.getElementById('platSel').value,
+        mode:     curMode,
+        language: document.getElementById('langSel').value
+      })
     });
-    const d=await r.json();
-    setProgStep(0,'done');setProgStep(1,'done');setProgFill(70);setProgSub('Rendering storyboard...');
-    if(!d.ok) throw new Error(d.error||'Failed');
-    curBrief=d.brief;curW=d.w||1280;curH=d.h||720;
-    setProgStep(2,'done');setProgFill(100);setProgSub('Done!');
-    setTimeout(()=>{document.getElementById('progCard').classList.remove('show');renderBrief(curBrief)},600);
-    toast('Video brief ready! ✓','ok');
-  }catch(e){
-    document.getElementById('progCard').classList.remove('show');
-    toast('Error: '+(e.name==='TimeoutError'?'Timeout — server chal raha hai?':e.message),'er');
+    const txt = await r.text();
+    let d;
+    try { d = JSON.parse(txt); }
+    catch(je) { throw new Error('Server error: ' + txt.slice(0,100)); }
+    clearInterval(pi); pf.style.width = '100%'; ps.textContent = 'Ready! ✓';
+    setTimeout(() => { pc.classList.remove('on'); pf.style.width = '0'; }, 700);
+    if (!d.ok) throw new Error(d.error || 'Failed');
+    curBrief = d.brief;
+    curBrief._w = d.w || 1280;
+    curBrief._h = d.h || 720;
+    renderBrief(curBrief);
+    showToast('Script ready! ✓', 'ok');
+  } catch(e) {
+    clearInterval(pi); pc.classList.remove('on');
+    showToast('Error: ' + (e.name === 'AbortError' ? 'Timeout — server check karo' : e.message), 'er');
   }
-  btn.disabled=false;
-  document.getElementById('mainGenTxt').innerHTML='&#10148; Generate';
+  btn.disabled = false;
+  btn.innerHTML = '▶ Generate';
 }
 
-function showProgress(steps){
-  const pc=document.getElementById('progCard');pc.classList.add('show');
-  document.getElementById('progFill').style.width='0';
-  document.getElementById('progSteps').innerHTML=steps.map((s,i)=>`<div class="pstep" id="ps${i}">${s}</div>`).join('');
-  document.getElementById('briefCard').classList.remove('show');
-  document.getElementById('scenesList').innerHTML='';
-}
-function setProgStep(i,cls){const el=document.getElementById('ps'+i);if(el){el.className='pstep '+cls;if(cls==='done')el.innerHTML='✓ '+el.textContent.replace('✓ ','')}}
-function setProgFill(p){document.getElementById('progFill').style.width=p+'%'}
-function setProgSub(t){document.getElementById('progSub').textContent=t}
-
-// ═══════════════════════════════════════════════════
-// RENDER BRIEF
-// ═══════════════════════════════════════════════════
-function renderBrief(br){
-  document.getElementById('briefCard').classList.add('show');
-  document.getElementById('briefTitle').textContent=br.title||br.theme||'Your Video';
-  document.getElementById('briefSub').textContent=br.purpose||'';
-
-  const dur=br.totalDuration>=60?Math.floor(br.totalDuration/60)+'m '+(br.totalDuration%60?br.totalDuration%60+'s':''):br.totalDuration+'s';
-  document.getElementById('briefMeta').innerHTML=`
-    <div class="bm-item"><div class="bm-val">${dur.trim()}</div><div class="bm-lbl">Duration</div></div>
-    <div class="bm-item"><div class="bm-val">${br.scenes?.length||0}</div><div class="bm-lbl">Scenes</div></div>
-    <div class="bm-item"><div class="bm-val">${br.aspectRatio||selAspect}</div><div class="bm-lbl">Aspect</div></div>
-    <div class="bm-item"><div class="bm-val">${(br.visualStyle||'auto').split('_')[0]}</div><div class="bm-lbl">Style</div></div>`;
-
-  if(br.hook){document.getElementById('hookCard').style.display='';document.getElementById('hookText').textContent=br.hook}
-  if(br.callToAction){document.getElementById('ctaCard').style.display='';document.getElementById('ctaText').textContent=br.callToAction}
-  if(br.hashtags?.length){
-    document.getElementById('hashCard').style.display='';
-    document.getElementById('hashTags').innerHTML=br.hashtags.map(h=>`<span onclick="copyText('${h}')" style="padding:2px 9px;border:1px solid var(--b2);border-radius:20px;font-size:11px;color:var(--p);cursor:pointer">${h}</span>`).join('');
+// ═══ RENDER BRIEF ═══
+function renderBrief(br) {
+  document.getElementById('rTitle').textContent = br.title || br.theme || 'Your Video';
+  document.getElementById('rSub').textContent = br.purpose || '';
+  const dur = br.totalDuration >= 60 ? Math.floor(br.totalDuration/60)+'m '+(br.totalDuration%60?br.totalDuration%60+'s':'') : br.totalDuration+'s';
+  document.getElementById('rMeta').innerHTML = `
+    <div class="rmi"><div class="rmi-v">${dur.trim()}</div><div class="rmi-l">Duration</div></div>
+    <div class="rmi"><div class="rmi-v">${br.scenes?.length||0}</div><div class="rmi-l">Scenes</div></div>
+    <div class="rmi"><div class="rmi-v">${br.aspectRatio||curAspect}</div><div class="rmi-l">Aspect</div></div>
+    <div class="rmi"><div class="rmi-v">${(br.visualStyle||'auto').split('_')[0]}</div><div class="rmi-l">Style</div></div>`;
+  if (br.hook) { document.getElementById('hookCard').style.display=''; document.getElementById('hookText').textContent=br.hook; }
+  if (br.callToAction) { document.getElementById('ctaCard').style.display=''; document.getElementById('ctaText').textContent=br.callToAction; }
+  if (br.hashtags?.length) {
+    document.getElementById('hashRow').innerHTML = br.hashtags.map(h => `<span class="htag" onclick="copyText('${h}')">${h}</span>`).join('');
   }
-
-  const sl=document.getElementById('scenesList');
-  sl.innerHTML='';
-  const fc=fboxClass();
-  (br.scenes||[]).forEach((sc,i)=>{
-    sl.insertAdjacentHTML('beforeend',`
-      <div class="sc" id="sc${i}" style="animation-delay:${i*0.05}s">
-        <div class="sc-top">
-          <div class="sc-num">${sc.id||i+1}</div>
-          <div class="sc-ttl">${sc.title||'Scene '+(i+1)}</div>
-          <div class="sc-dur">&#9201; ${sc.duration}s</div>
+  const sl = document.getElementById('sceneList');
+  sl.innerHTML = '';
+  const fc = curAspect === '9:16' ? 'port' : curAspect === '1:1' ? 'sq' : 'land';
+  (br.scenes||[]).forEach((sc, i) => {
+    const d = document.createElement('div');
+    d.className = 'sc'; d.id = 'sc' + i;
+    d.innerHTML = `
+      <div class="sc-top">
+        <div class="sc-num">${sc.id||i+1}</div>
+        <div class="sc-ttl">${sc.title||'Scene '+(i+1)}</div>
+        <div class="sc-dur">⏱ ${sc.duration}s</div>
+      </div>
+      <div class="sc-frame ${fc}" id="sf${i}">
+        <div class="fph">
+          <span class="fph-ico">🎬</span>
+          <span class="fph-lbl">Scene ${i+1}</span>
+          <button class="gfbtn" id="gfb${i}" onclick="doOneImage(${i})">🖼 Generate</button>
         </div>
-        <div class="sc-frame ${fc}" id="sf${i}">
-          <div class="frame-ph">
-            <span class="frame-ph-ico">&#127916;</span>
-            <span style="font-size:11px;color:var(--mu2)">Scene ${i+1}</span>
-            <button class="gen-frame-btn" onclick="genOneImage(${i})" id="gib${i}">&#127752; Generate Image</button>
-          </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-narr" id="snarr${i}">${esc(sc.narration||'')}</div>
+        <div class="sc-tags">
+          <span class="sc-tag">📺 ${sc.onScreen||''}</span>
+          <span class="sc-tag">→ ${sc.transition||'fade'}</span>
+          <span class="sc-tag">🎵 ${sc.bgMusic||sc.musicMood||'ambient'}</span>
+          <span class="sc-tag">🌈 ${sc.colorGrade||'cinematic'}</span>
         </div>
-        <div class="sc-body">
-          <div class="sc-narr" id="snarr${i}">${esc(sc.narration||'')}</div>
-          <div class="sc-tags">
-            <span class="sc-tag sc-tag-p">&#128250; ${sc.onScreen||''}</span>
-            <span class="sc-tag sc-tag-g">&#8594; ${sc.transition||'fade'}</span>
-            <span class="sc-tag sc-tag-a">&#9835; ${sc.bgMusic||sc.musicMood||'ambient'}</span>
-            <span class="sc-tag">&#127775; ${sc.colorGrade||'cinematic'}</span>
-            ${sc.camera?`<span class="sc-tag">&#127909;&#65039; ${sc.camera}</span>`:''}
-          </div>
-          <div class="sc-acts">
-            <button class="sca" onclick="genOneImage(${i})">&#128444; Image</button>
-            <button class="sca" onclick="genOneClip(${i})">&#127916; Clip</button>
-            <button class="sca tts" onclick="genOneTTS(${i})" id="ttsbtn${i}">&#128266; Voice</button>
-            <button class="sca" onclick="searchStock(${i})">&#128269; Stock</button>
-            <button class="sca" onclick="copyText(document.getElementById('snarr${i}').textContent)">&#128203; Copy</button>
-            <button class="sca" onclick="editNarr('snarr${i}')">&#9999;&#65039; Edit</button>
-          </div>
-          <div id="audrow${i}" style="display:none"></div>
-          <div id="stockrow${i}" style="display:none"></div>
+        <div class="sc-acts">
+          <button class="sca" onclick="doOneSmart(${i})">✨ Generate</button>
+          <button class="sca" onclick="doOneImage(${i})">🖼 Image</button>
+          <button class="sca" onclick="doOneClip(${i})">🎬 Clip</button>
+          <button class="sca" id="ttsbtn${i}" onclick="doOneTTS(${i})">🔊 Voice</button>
+          <button class="sca" onclick="copyText(document.getElementById('snarr${i}').textContent)">📋 Copy</button>
+          <button class="sca" onclick="editNarr('snarr${i}')">✏️ Edit</button>
         </div>
-      </div>`);
+        <div id="audrow${i}" style="display:none"></div>
+      </div>`;
+    sl.appendChild(d);
   });
-
-  // Scroll to results
-  document.getElementById('resultsScroll').scrollTop=0;
+  document.getElementById('rcard').classList.add('on');
+  document.getElementById('rcard').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-// ═══════════════════════════════════════════════════
-// IMAGE GENERATION
-// ═══════════════════════════════════════════════════
-async function genOneImage(idx){
-  if(!curBrief?.scenes?.[idx]) return;
-  const sc=curBrief.scenes[idx];
-  const btn=document.getElementById('gib'+idx);
-  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin">&#9696;</span>'}
-
-  const r=await fetch(B+'/api/image/generate',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt:sc.imagePrompt||sc.visual||sc.narration,style:selStyle,w:curW,h:curH,sceneId:sc.id||idx+1}),
-    signal:AbortSignal.timeout(85000)
-  }).catch(()=>null);
-
-  if(r?.ok){
-    const d=await r.json();
-    if(d.ok&&d.url){
-      sceneImages[idx]=B+d.url;
-      const sf=document.getElementById('sf'+idx);
-      const fc=fboxClass();
-      sf.className=`sc-frame ${fc}`;
-      sf.innerHTML=`<img src="${B+d.url}" alt="Scene ${idx+1}" loading="lazy"/>
-        <div class="ost-overlay">${esc(sc.onScreen||'')}</div>
-        <div class="frame-dur">${sc.duration}s</div>
-        <div class="frame-tr">${sc.transition||'fade'}</div>`;
-      toast(`Scene ${idx+1} ✓`,'ok');
-    } else {if(btn){btn.disabled=false;btn.textContent='↺ Retry'} toast('Image failed','er')}
-  } else {if(btn){btn.disabled=false;btn.textContent='↺ Retry'} toast('Request failed','er')}
-}
-
-async function genAllImages(){
-  if(!curBrief?.scenes?.length){toast('Pehle brief generate karo!','er');return}
-  toast('Sari images generate ho rahi hain...','in');
-  const tasks=curBrief.scenes.map((_,i)=>genOneImage(i).then(()=>sleep(300)));
-  await Promise.allSettled(tasks);
-  toast('Sari images ready! ✓','ok');
-}
-
-// ═══════════════════════════════════════════════════
-// TTS GENERATION
-// ═══════════════════════════════════════════════════
-async function genOneTTS(idx){
-  if(!curBrief?.scenes?.[idx]) return;
-  const sc=curBrief.scenes[idx];
-  const btn=document.getElementById('ttsbtn'+idx);
-  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin">&#9696;</span>'}
-
-  const r=await fetch(B+'/api/tts/generate',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({text:sc.narration,voice:selVoice,sceneId:sc.id||idx+1}),
-    signal:AbortSignal.timeout(45000)
-  }).catch(()=>null);
-
-  if(r?.ok){
-    const d=await r.json();
-    if(d.ok&&d.url){
-      sceneAudios[idx]=B+d.url;
-      document.getElementById('audrow'+idx).style.display='';
-      document.getElementById('audrow'+idx).innerHTML=`
-        <div class="audio-row">
-          <span style="font-size:11px;color:var(--mu);font-weight:500;flex-shrink:0">&#128266; ${d.engine||'tts'}</span>
-          <audio controls src="${B+d.url}" style="flex:1;height:28px"></audio>
-        </div>`;
-      toast(`Voice ${idx+1} ready! ✓`,'ok');
-    } else {if(btn){btn.disabled=false;btn.innerHTML='&#128266; Voice'} toast('TTS failed — pip install edge-tts','er')}
-  } else {if(btn){btn.disabled=false;btn.innerHTML='&#128266; Voice'} toast('TTS request failed','er')}
-}
-
-async function genAllTTS(){
-  if(!curBrief?.scenes?.length){toast('Pehle brief generate karo!','er');return}
-  toast('Sari voiceover generate ho rahi hain...','in');
-  for(let i=0;i<curBrief.scenes.length;i++){await genOneTTS(i);await sleep(500)}
-  toast('Sari voiceover ready! ✓','ok');
-}
-
-// ═══════════════════════════════════════════════════
-// CLIP GENERATION
-// ═══════════════════════════════════════════════════
-async function genOneClip(idx){
-  if(!curBrief?.scenes?.[idx]) return;
-  const sc=curBrief.scenes[idx];
-  toast(`Scene ${idx+1} clip generate ho raha hai...`,'in');
-
-  const r=await fetch(B+'/api/clip/generate',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt:sc.imagePrompt||sc.visual||sc.narration,videoQuery:sc.videoQuery||sc.title,sceneId:sc.id||idx+1,duration:sc.duration,w:curW,h:curH,style:selStyle}),
-    signal:AbortSignal.timeout(140000)
-  }).catch(()=>null);
-
-  if(r?.ok){
-    const d=await r.json();
-    if(d.ok&&d.url){
-      sceneClips[idx]=B+d.url;
-      const sf=document.getElementById('sf'+idx);
-      const fc=fboxClass();
-      sf.className=`sc-frame ${fc}`;
-      const isVid=d.type==='video';
-      sf.innerHTML=isVid
-        ?`<video src="${B+d.url}" autoplay loop muted playsinline></video>
-           <div class="frame-dur">${sc.duration}s · ${d.engine}</div>
-           <div class="frame-tr">${sc.transition||'fade'}</div>`
-        :`<img src="${B+d.url}" alt="Scene ${idx+1}"/>
-           <div class="ost-overlay">${esc(sc.onScreen||'')}</div>
-           <div class="frame-dur">${sc.duration}s</div>
-           <div class="frame-tr">${sc.transition||'fade'}</div>`;
-      toast(`Scene ${idx+1} clip ready! (${d.engine}) ✓`,'ok');
-    } else toast('Clip failed','er');
-  } else toast('Clip request failed','er');
-}
-
-async function genAllClips(){
-  if(!curBrief?.scenes?.length){toast('Pehle brief generate karo!','er');return}
-  toast('Sare clips generate ho rahe hain...','in');
-  for(let i=0;i<curBrief.scenes.length;i++){await genOneClip(i);await sleep(800)}
-  toast('Sare clips ready! ✓','ok');
-}
-
-// ═══════════════════════════════════════════════════
-// STOCK SEARCH
-// ═══════════════════════════════════════════════════
-async function searchStock(idx){
-  if(!curBrief?.scenes?.[idx]) return;
-  const sc=curBrief.scenes[idx];
-  const q=sc.videoQuery||sc.title||'nature';
-  const row=document.getElementById('stockrow'+idx);
-  row.style.display='';
-  row.innerHTML=`<div style="font-size:11px;color:var(--mu);margin-top:6px"><span class="spin">&#9696;</span> Searching stock...</div>`;
-
-  const r=await fetch(B+'/api/stock/search',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({query:q,type:'video',orientation:selAspect==='9:16'?'vertical':'horizontal'}),
-    signal:AbortSignal.timeout(20000)
-  }).catch(()=>null);
-
-  if(r?.ok){
-    const d=await r.json();
-    if(d.results?.length){
-      row.innerHTML=`<div style="font-size:10px;color:var(--mu);margin-top:6px;margin-bottom:4px">Stock results for "${q}":</div>
-        <div class="stock-grid">${d.results.slice(0,6).map((v,j)=>`
-          <div class="stock-item" onclick="useStock(${idx},'${encodeURIComponent(v.url)}','${v.type}')">
-            <img src="${v.thumb||v.url}" loading="lazy"/>
-            <div class="stock-src">${v.source}</div>
-            <div class="use-btn"><span>Use</span></div>
-          </div>`).join('')}
-        </div>`;
+// ═══ IMAGE GENERATION ═══
+async function doOneImage(i) {
+  if (!curBrief?.scenes?.[i]) return;
+  const sc = curBrief.scenes[i];
+  const btn = document.getElementById('gfb' + i);
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin">⟳</span>'; }
+  try {
+    const r = await fetch(B + '/api/image/generate', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: sc.imagePrompt||sc.visual||sc.narration, style: curStyle, w: curBrief._w||1280, h: curBrief._h||720, sceneId: sc.id||i+1})
+    });
+    const d = await r.json();
+    if (d.ok && d.url) {
+      imgMap[i] = B + d.url;
+      const sf = document.getElementById('sf' + i);
+      const fc = curAspect === '9:16' ? 'port' : curAspect === '1:1' ? 'sq' : 'land';
+      sf.className = 'sc-frame ' + fc;
+      sf.innerHTML = `<img src="${B+d.url}" alt="Scene ${i+1}" loading="lazy"/>
+        <div class="ost-ov">${esc(sc.onScreen||'')}</div>
+        <div class="fdur">${sc.duration}s</div>
+        <div class="ftr">${sc.transition||'fade'}</div>`;
+      showToast('Scene '+(i+1)+' ✓', 'ok');
     } else {
-      row.innerHTML=`<div style="font-size:11px;color:var(--re);margin-top:6px">No stock results. Set PIXABAY_KEY or PEXELS_KEY in .env</div>`;
+      if (btn) { btn.disabled=false; btn.innerHTML='↺ Retry'; }
+      showToast('Image failed', 'er');
     }
-  } else row.innerHTML=`<div style="font-size:11px;color:var(--re);margin-top:6px">Stock search failed. Set API keys in .env</div>`;
-}
-
-async function useStock(idx, encodedUrl, type){
-  const url=decodeURIComponent(encodedUrl);
-  const sc=curBrief?.scenes?.[idx];
-  if(!sc) return;
-  toast('Downloading stock clip...','in');
-
-  // Download via server
-  const r=await fetch(B+'/api/clip/generate',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt:sc.videoQuery||'nature',videoQuery:sc.videoQuery||'nature',sceneId:sc.id||idx+1,duration:sc.duration,w:curW,h:curH}),
-    signal:AbortSignal.timeout(60000)
-  }).catch(()=>null);
-
-  if(r?.ok){
-    const d=await r.json();
-    if(d.ok&&d.url){
-      const sf=document.getElementById('sf'+idx);const fc=fboxClass();
-      sf.className=`sc-frame ${fc}`;
-      sf.innerHTML=type==='video'
-        ?`<video src="${B+d.url}" autoplay loop muted playsinline></video><div class="frame-dur">${sc.duration}s · stock</div>`
-        :`<img src="${B+d.url}"/><div class="frame-dur">${sc.duration}s · stock</div>`;
-      document.getElementById('stockrow'+idx).style.display='none';
-      toast('Stock media ready! ✓','ok');
-    }
+  } catch(e) {
+    if (btn) { btn.disabled=false; btn.innerHTML='↺ Retry'; }
+    showToast('Timeout', 'er');
   }
 }
 
-// ═══════════════════════════════════════════════════
-// ASSET GENERATOR
-// ═══════════════════════════════════════════════════
-async function genAssets(){
-  const prompt=document.getElementById('asPrompt').value.trim();
-  if(!prompt){toast('Prompt likhein!','er');return}
-  const btn=document.getElementById('asBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spin">&#9696;</span> Generating...';
-  const [w,h]=document.getElementById('asSize').value.split(',').map(Number);
-  const cnt=parseInt(document.getElementById('asCount').value);
-  const style=document.getElementById('asStyle').value;
-  const grid=document.getElementById('asGrid');
-  grid.innerHTML=Array.from({length:cnt},(_,i)=>`
-    <div class="ai-card" id="ac${i}">
-      <div style="width:100%;aspect-ratio:16/9;background:var(--s3);display:flex;align-items:center;justify-content:center"><span class="spin" style="font-size:20px;color:var(--mu2)">&#9696;</span></div>
-      <div class="ai-foot"><span>Generating...</span></div>
-    </div>`).join('');
-
-  const tasks=Array.from({length:cnt},(_,i)=>
-    fetch(B+'/api/image/generate',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt,style,w,h,sceneId:i+1,seed:Math.floor(Math.random()*99999)}),
-      signal:AbortSignal.timeout(85000)
-    }).then(r=>r.json()).then(d=>{
-      const c=document.getElementById('ac'+i);
-      if(d.ok&&c) c.innerHTML=`<img src="${B+d.url}" loading="lazy"/><div class="ai-foot"><span>${style||'auto'}</span><a href="${B+d.url}" download class="dl-a">&#8595; Save</a></div>`;
-      else if(c) c.innerHTML=`<div style="padding:20px;text-align:center;color:var(--re);font-size:11px">Failed</div>`;
-    }).catch(()=>{})
-  );
-  await Promise.all(tasks);
-  btn.disabled=false;btn.innerHTML='&#10024; Generate Images';
-  toast(`${cnt} images ready! ✓`,'ok');
+// Smart generate based on selected media type
+async function doOneSmart(i) {
+  if (curMedia === 'stock_video' || curMedia === 'ai_video') {
+    await doOneClip(i);
+  } else {
+    await doOneImage(i);
+  }
 }
 
-// ═══════════════════════════════════════════════════
-// COPY / EXPORT
-// ═══════════════════════════════════════════════════
-function copyScript(){
-  if(!curBrief){toast('Pehle generate karo!','er');return}
-  let t=`${curBrief.title||curBrief.theme}\n\nHOOK: ${curBrief.hook||''}\n\n${'═'.repeat(50)}\n\n`;
-  (curBrief.scenes||[]).forEach((s,i)=>{t+=`[SCENE ${i+1}] ${s.title} — ${s.duration}s\nNARRATION: ${s.narration}\nON-SCREEN: ${s.onScreen}\nCAMERA: ${s.camera||''} | TRANSITION: ${s.transition} | MUSIC: ${s.bgMusic||s.musicMood}\n\n`});
-  t+=`CTA: ${curBrief.callToAction||''}\n\nDESCRIPTION:\n${curBrief.description||''}\n\nHASHTAGS: ${(curBrief.hashtags||[]).join(' ')}`;
+async function doAllSmart() {
+  if (curMedia === 'stock_video' || curMedia === 'ai_video') {
+    await doAllClips();
+  } else {
+    await doAllImages();
+  }
+}
+
+async function doAllImages() {
+  if (!curBrief?.scenes?.length) { showToast('Pehle generate karo!', 'er'); return; }
+  showToast('Sari images generate ho rahi hain...', 'in');
+  for (let i = 0; i < curBrief.scenes.length; i++) {
+    await doOneImage(i);
+    await sleep(400);
+  }
+  showToast('Sari images ready! ✓', 'ok');
+}
+
+// ═══ TTS ═══
+async function doOneTTS(i) {
+  if (!curBrief?.scenes?.[i]) return;
+  const sc = curBrief.scenes[i];
+  const btn = document.getElementById('ttsbtn' + i);
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spin">⟳</span>'; }
+  try {
+    const r = await fetch(B + '/api/tts/generate', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text: sc.narration, voice: curVoice, sceneId: sc.id||i+1})
+    });
+    const d = await r.json();
+    if (d.ok && d.url) {
+      audMap[i] = B + d.url;
+      const ar = document.getElementById('audrow' + i);
+      ar.style.display = '';
+      ar.innerHTML = `<div class="aud-row"><span style="font-size:11px;color:var(--p);font-weight:500">🔊 ${d.engine||'tts'}</span><audio controls src="${B+d.url}"></audio></div>`;
+      if (btn) { btn.disabled=false; btn.innerHTML='✓ Voice'; }
+      showToast('Voice '+(i+1)+' ready! ✓', 'ok');
+    } else {
+      if (btn) { btn.disabled=false; btn.innerHTML='🔊 Voice'; }
+      showToast('TTS failed', 'er');
+    }
+  } catch(e) {
+    if (btn) { btn.disabled=false; btn.innerHTML='🔊 Voice'; }
+    showToast('TTS timeout', 'er');
+  }
+}
+
+async function doAllTTS() {
+  if (!curBrief?.scenes?.length) return;
+  showToast('Voiceover generate ho rahi hai...', 'in');
+  for (let i = 0; i < curBrief.scenes.length; i++) {
+    await doOneTTS(i); await sleep(600);
+  }
+  showToast('Sari voices ready! ✓', 'ok');
+}
+
+// ═══ CLIP ═══
+async function doOneClip(i) {
+  if (!curBrief?.scenes?.[i]) return;
+  const sc = curBrief.scenes[i];
+  showToast('Clip generate ho raha hai...', 'in');
+  try {
+    const r = await fetch(B + '/api/clip/generate', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: sc.imagePrompt||sc.narration, videoQuery: sc.videoQuery||sc.title||'nature', sceneId: sc.id||i+1, duration: sc.duration, w: curBrief._w||1280, h: curBrief._h||720, style: curStyle})
+    });
+    const d = await r.json();
+    if (d.ok && d.url) {
+      const sf = document.getElementById('sf' + i);
+      const fc = curAspect === '9:16' ? 'port' : curAspect === '1:1' ? 'sq' : 'land';
+      sf.className = 'sc-frame ' + fc;
+      sf.innerHTML = d.type === 'video'
+        ? `<video src="${B+d.url}" autoplay loop muted playsinline></video><div class="fdur">${sc.duration}s · ${d.engine}</div>`
+        : `<img src="${B+d.url}" loading="lazy"/><div class="fdur">${sc.duration}s</div><div class="ftr">${sc.transition||'fade'}</div>`;
+      showToast('Clip '+(i+1)+' ready! ('+d.engine+') ✓', 'ok');
+    } else showToast('Clip failed', 'er');
+  } catch(e) { showToast('Clip timeout', 'er'); }
+}
+
+async function doAllClips() {
+  if (!curBrief?.scenes?.length) return;
+  showToast('Sare clips generate ho rahe hain...', 'in');
+  for (let i = 0; i < curBrief.scenes.length; i++) {
+    await doOneClip(i); await sleep(800);
+  }
+  showToast('Sare clips ready! ✓', 'ok');
+}
+
+// ═══ COPY / EDIT ═══
+function copyScript() {
+  if (!curBrief) return;
+  let t = `${curBrief.title||''}\n\nHOOK: ${curBrief.hook||''}\n\n${'='.repeat(48)}\n\n`;
+  (curBrief.scenes||[]).forEach((sc,i) => {
+    t += `[SCENE ${i+1}] ${sc.title} — ${sc.duration}s\nNARRATION: ${sc.narration}\nON-SCREEN: ${sc.onScreen}\nCAMERA: ${sc.camera||''} | MUSIC: ${sc.bgMusic||sc.musicMood}\n\n`;
+  });
+  t += `CTA: ${curBrief.callToAction||''}\n${(curBrief.hashtags||[]).join(' ')}`;
   copyText(t);
 }
 
-function saveProject(){
-  if(!curBrief){toast('Pehle generate karo!','er');return}
-  const p={id:Date.now(),title:curBrief.title||curBrief.theme||'Untitled',style:selStyle,aspect:selAspect,scenes:curBrief.scenes?.length,dur:curBrief.totalDuration,date:new Date().toLocaleDateString(),thumb:Object.values(sceneImages)[0]||null,data:curBrief};
-  projects.unshift(p);if(projects.length>30)projects=projects.slice(0,30);
-  localStorage.setItem('df_projects',JSON.stringify(projects));
-  toast('Project saved! ✓','ok');
+function editNarr(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.contentEditable = true;
+  el.style.outline = '1px solid rgba(14,165,233,.4)';
+  el.style.borderRadius = '4px';
+  el.focus();
+  el.onblur = () => { el.contentEditable=false; el.style.outline=''; showToast('Updated ✓','ok'); };
 }
 
-function renderProjects(){
-  const el=document.getElementById('projGrid');
-  if(!projects.length){el.innerHTML='<div class="proj-empty" style="font-size:36px;opacity:.2;margin-bottom:12px">📁</div><div class="proj-empty">No saved projects yet.<br>Create a video and save it!</div>';return}
-  el.innerHTML=`<div class="proj-grid">${projects.map(p=>`
+// ═══ PROJECTS ═══
+function saveProject() {
+  if (!curBrief) { showToast('Pehle generate karo!','er'); return; }
+  const p = {id:Date.now(), title:curBrief.title||curBrief.theme||'Untitled', style:curStyle, aspect:curAspect, scenes:curBrief.scenes?.length, dur:curBrief.totalDuration, date:new Date().toLocaleDateString(), thumb:Object.values(imgMap)[0]||null, data:curBrief};
+  projects.unshift(p);
+  if (projects.length > 30) projects = projects.slice(0,30);
+  localStorage.setItem('df_proj', JSON.stringify(projects));
+  showToast('Saved! ✓','ok');
+}
+
+function renderProjects() {
+  const el = document.getElementById('projGrid');
+  if (!projects.length) { el.innerHTML='<div style="text-align:center;padding:40px;color:var(--mu2)">No saved projects yet</div>'; return; }
+  el.innerHTML = projects.map(p => `
     <div class="proj-card" onclick="loadProject(${p.id})">
       <div class="proj-thumb">${p.thumb?`<img src="${p.thumb}"/>`:'📁'}</div>
       <div class="proj-body">
         <div class="proj-ttl">${esc(p.title)}</div>
-        <div class="proj-meta">
-          <span class="proj-tag">${p.scenes} scenes</span>
-          <span class="proj-tag">${p.aspect}</span>
-          <span>${p.date}</span>
-        </div>
+        <div class="proj-meta"><span class="proj-tag">${p.scenes} scenes</span><span class="proj-tag">${p.aspect}</span><span>${p.date}</span></div>
       </div>
-    </div>`).join('')}</div>`;
-  document.querySelector('.proj-grid').style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px';
+    </div>`).join('');
 }
 
-function loadProject(id){
-  const p=projects.find(x=>x.id===id);
-  if(!p?.data) return;
-  curBrief=p.data;sceneImages={};sceneAudios={};sceneClips={};
-  selStyle=p.style||'none';selAspect=p.aspect||'16:9';
-  goPage('create',document.querySelector('.tmd'));
+function loadProject(id) {
+  const p = projects.find(x => x.id===id);
+  if (!p?.data) return;
+  curBrief = p.data; imgMap={}; audMap={};
+  curStyle=p.style||'none'; curAspect=p.aspect||'16:9';
+  goPage('create', document.getElementById('tnav-create'));
   renderBrief(p.data);
-  toast('Project loaded! ✓','ok');
+  showToast('Loaded! ✓','ok');
 }
 
-function clearProjects(){
-  if(!confirm('Sare projects delete karein?')) return;
-  projects=[];localStorage.removeItem('df_projects');renderProjects();
+function clearProjects() {
+  if (!confirm('Sare projects delete karein?')) return;
+  projects=[]; localStorage.removeItem('df_proj'); renderProjects();
 }
 
-// ═══════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════
-function editNarr(id){
-  const el=document.getElementById(id);if(!el)return;
-  el.contentEditable=true;el.style.outline='1px solid rgba(14,165,233,.4)';el.style.borderRadius='5px';el.style.padding='4px';el.focus();
-  el.onblur=()=>{el.contentEditable=false;el.style.outline='';el.style.padding='';toast('Updated ✓','ok')};
+// ═══ ASSETS ═══
+async function genAssets() {
+  const prompt = document.getElementById('asPrompt').value.trim();
+  if (!prompt) { showToast('Prompt likho!','er'); return; }
+  const btn = document.getElementById('asBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spin">⟳</span> Generating...';
+  const [w,h] = document.getElementById('asSize').value.split(',').map(Number);
+  const cnt   = parseInt(document.getElementById('asCount').value);
+  const style = document.getElementById('asStyle').value;
+  const grid  = document.getElementById('asGrid');
+  grid.innerHTML = Array.from({length:cnt},(_,i)=>`<div class="ai-card" id="ac${i}"><div style="aspect-ratio:16/9;background:var(--s3);display:flex;align-items:center;justify-content:center"><span class="spin" style="font-size:18px">⟳</span></div><div class="ai-foot"><span>Generating...</span></div></div>`).join('');
+  const tasks = Array.from({length:cnt},(_,i)=>{
+    return fetch(B+'/api/image/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,style,w,h,sceneId:i+1,seed:Math.floor(Math.random()*99999)})})
+      .then(r=>r.json()).then(d=>{
+        const c=document.getElementById('ac'+i);
+        if(d.ok&&c) c.innerHTML=`<img src="${B+d.url}" loading="lazy"/><div class="ai-foot"><span>${style||'auto'}</span><a href="${B+d.url}" download class="dl-a">↓ Save</a></div>`;
+        else if(c) c.innerHTML='<div style="padding:16px;text-align:center;color:var(--re);font-size:11px">Failed</div>';
+      }).catch(()=>{const c=document.getElementById('ac'+i);if(c)c.innerHTML='<div style="padding:16px;text-align:center;color:var(--re);font-size:11px">Error</div>';});
+  });
+  await Promise.all(tasks);
+  btn.disabled=false; btn.innerHTML='✨ Generate';
+  showToast(cnt+' images ready! ✓','ok');
 }
+
+// ═══ UTILS ═══
 function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function copyText(t){navigator.clipboard.writeText(t).then(()=>toast('Copied! ✓','ok')).catch(()=>toast('Copy failed','er'))}
+function copyText(t){navigator.clipboard.writeText(t).then(()=>showToast('Copied! ✓','ok')).catch(()=>showToast('Copy failed','er'))}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
-function toast(msg,type=''){
-  const el=document.getElementById('toast');el.textContent=msg;el.className='toast on'+(type?' '+type:'');
-  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),3000);
+function showToast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast on'+(type?' '+type:'');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),3000);
 }
+
+// ═══ MEDIA TYPE ═══
+let curMedia = 'image';
+function setMedia(btn) {
+  document.querySelectorAll('#mediaRow .asp-pill').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  curMedia = btn.dataset.v;
+}
+
+// Start!
+init();
 </script>
 </body>
 </html>
