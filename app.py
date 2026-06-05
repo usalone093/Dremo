@@ -295,7 +295,7 @@ def el_tts(text, scene_id=0):
 # STATIC
 # ═══════════════════════════════════════════════════
 @app.route("/")
-def index(): return send_from_directory("static", "index.html")
+def index(): return send_from_directory(".", "index.html")
 
 @app.route("/outputs/<path:f>")
 def serve_out(f): return send_from_directory("outputs", f)
