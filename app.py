@@ -19,7 +19,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 load_dotenv()
-app = Flask(__name__, static_folder="static")
+app = Flask(__name__, static_folder=None)  # We handle static manually
 CORS(app)
 
 PORT = int(os.getenv("PORT", 5000))
@@ -295,7 +295,25 @@ def el_tts(text, scene_id=0):
 # STATIC
 # ═══════════════════════════════════════════════════
 @app.route("/")
-def index(): return send_from_directory(".", "index.html")
+def index():
+    import os
+    if os.path.exists("index.html"):
+        return send_from_directory(".", "index.html")
+    elif os.path.exists("static/index.html"):
+        return send_from_directory("static", "index.html")
+    return "<h1>DreamForge</h1><p>index.html not found</p>", 404
+
+@app.errorhandler(404)
+def not_found(e):
+    from flask import request as req
+    if req.path.startswith("/api/"):
+        return jsonify({"ok": False, "error": f"API route not found: {req.path}"}), 404
+    import os
+    if os.path.exists("index.html"):
+        return send_from_directory(".", "index.html")
+    elif os.path.exists("static/index.html"):
+        return send_from_directory("static", "index.html")
+    return "<h1>404</h1>", 404
 
 @app.route("/outputs/<path:f>")
 def serve_out(f): return send_from_directory("outputs", f)
